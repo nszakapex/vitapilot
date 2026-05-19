@@ -745,6 +745,8 @@ small {
 
 .context-graph,
 .context-section,
+.context-summary-card,
+.context-hero,
 .snapshot-card {
   display: grid;
   gap: 16px;
@@ -754,11 +756,23 @@ small {
   gap: 24px;
 }
 
+.context-hero {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  grid-template-columns: minmax(0, 1fr) max-content;
+  padding: 20px;
+}
+
+.context-summary-card,
 .snapshot-card,
+.empty-context-state,
 .context-state,
 .first-week-summary,
 .first-week-action-grid article,
 .context-callout-grid article,
+.confidence-panel,
 .confidence-column,
 .context-note {
   background: var(--surface);
@@ -767,13 +781,16 @@ small {
   box-shadow: var(--shadow);
 }
 
+.context-summary-card,
 .snapshot-card,
+.empty-context-state,
 .context-state {
   padding: 20px;
 }
 
 .context-section__header,
 .context-card__header,
+.first-week-day-card header,
 .first-week-day header,
 .context-footer {
   align-items: center;
@@ -793,6 +810,8 @@ small {
 .context-section__header small,
 .context-footer,
 .context-card__kicker,
+.first-week-day-card header span,
+.first-week-day-card header small,
 .first-week-day header span,
 .first-week-day header small,
 .context-callout-grid span {
@@ -810,10 +829,12 @@ small {
 
 .snapshot-metrics,
 .snapshot-patterns,
+.context-card-grid,
 .context-grid,
 .first-week-grid,
 .first-week-action-grid,
 .context-callout-grid,
+.confidence-panel,
 .confidence-grid {
   display: grid;
   gap: 12px;
@@ -824,6 +845,7 @@ small {
 }
 
 .snapshot-patterns,
+.context-card-grid,
 .context-grid,
 .first-week-action-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -856,6 +878,7 @@ small {
 .snapshot-patterns dt,
 .context-mini-list dt,
 .first-week-summary dt,
+.first-week-day-card dt,
 .first-week-day dt {
   color: var(--muted);
   font-size: 0.76rem;
@@ -867,6 +890,7 @@ small {
 .snapshot-patterns dd,
 .context-mini-list dd,
 .first-week-summary dd,
+.first-week-day-card dd,
 .first-week-day dd {
   color: var(--ink);
   margin: 0;
@@ -887,24 +911,30 @@ small {
 }
 
 .context-card--strength {
+  background: linear-gradient(180deg, var(--surface) 0%, var(--green-soft) 170%);
   border-top: 4px solid var(--green);
 }
 
 .context-card--friction {
+  background: linear-gradient(180deg, var(--surface) 0%, var(--surface-soft) 160%);
   border-top: 4px solid var(--gold);
 }
 
 .context-card--safety {
+  background: linear-gradient(180deg, var(--surface) 0%, var(--coral-soft) 185%);
   border-top: 4px solid var(--coral);
 }
 
 .context-card--rule {
+  background: linear-gradient(180deg, var(--surface) 0%, var(--blue-soft) 180%);
   border-top: 4px solid var(--blue);
 }
 
 .context-card h3,
+.first-week-day-card h3,
 .first-week-day h3,
 .first-week-action-grid h3,
+.confidence-panel h3,
 .confidence-column h3 {
   color: var(--ink);
   font-size: 0.98rem;
@@ -922,6 +952,7 @@ small {
 
 .context-mini-list,
 .first-week-summary dl,
+.first-week-day-card dl,
 .first-week-day dl {
   display: grid;
   gap: 10px;
@@ -929,6 +960,7 @@ small {
 }
 
 .context-mini-list div,
+.first-week-day-card dl div,
 .first-week-day dl div {
   display: grid;
   gap: 3px;
@@ -1002,6 +1034,7 @@ small {
 .first-week-summary,
 .first-week-action-grid article,
 .context-callout-grid article,
+.confidence-panel,
 .confidence-column {
   box-shadow: none;
   padding: 16px;
@@ -1014,12 +1047,14 @@ small {
 }
 
 .first-week-action-grid article,
+.confidence-panel,
 .confidence-column {
   display: grid;
   gap: 10px;
 }
 
 .first-week-action-grid ul,
+.confidence-panel ul,
 .confidence-column ul {
   color: var(--muted);
   display: grid;
@@ -1033,6 +1068,7 @@ small {
   gap: 6px;
 }
 
+.first-week-day-card,
 .first-week-day {
   background: var(--surface);
   border: 1px solid var(--line);
@@ -1043,6 +1079,7 @@ small {
   padding: 14px;
 }
 
+.first-week-day-card p,
 .first-week-day p {
   background: var(--surface-soft);
   border-radius: var(--radius);
@@ -1055,6 +1092,7 @@ small {
   padding-top: 14px;
 }
 
+.empty-context-state,
 .context-state {
   align-items: start;
   justify-items: start;
@@ -1142,13 +1180,26 @@ small {
   .map-surface,
   .snapshot-metrics,
   .snapshot-patterns,
+  .context-hero,
+  .context-card-grid,
   .context-grid,
   .context-grid--two,
+  .first-week-grid,
   .first-week-summary,
   .first-week-action-grid,
   .context-callout-grid,
+  .confidence-panel,
   .confidence-grid {
     grid-template-columns: 1fr;
+  }
+
+  .first-week-grid {
+    overflow-x: visible;
+  }
+
+  .first-week-day-card,
+  .first-week-day {
+    min-width: 0;
   }
 
   .meal-row,
