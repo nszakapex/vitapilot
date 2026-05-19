@@ -1,4 +1,4 @@
-export type TabId = 'intake' | 'today' | 'assistant' | 'food' | 'fitness' | 'local' | 'profile'
+export type TabId = 'intake' | 'context' | 'today' | 'assistant' | 'food' | 'fitness' | 'local' | 'profile'
 
 export type HealthArea =
   | 'nutrition'

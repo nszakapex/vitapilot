@@ -1,5 +1,6 @@
 import {
   Bot,
+  Brain,
   CalendarDays,
   Dumbbell,
   Map,
@@ -19,6 +20,7 @@ interface NavigationItem {
 
 const navigationItems: NavigationItem[] = [
   { id: 'intake', label: 'Intake', icon: NotebookPen },
+  { id: 'context', label: 'Context', icon: Brain },
   { id: 'today', label: 'Today', icon: CalendarDays },
   { id: 'assistant', label: 'Coach', icon: Bot },
   { id: 'food', label: 'Food', icon: Salad },

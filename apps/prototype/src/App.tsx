@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { AppShell } from './components/AppShell'
 import { AssistantScreen } from './screens/AssistantScreen'
+import { ContextGraphScreen } from './screens/ContextGraphScreen'
 import { FitnessScreen } from './screens/FitnessScreen'
 import { FoodScreen } from './screens/FoodScreen'
 import { IntakeScreen } from './screens/IntakeScreen'
@@ -15,6 +16,7 @@ function App() {
 
   const screens: Record<TabId, ReactNode> = {
     intake: <IntakeScreen />,
+    context: <ContextGraphScreen onOpenIntake={() => setActiveTab('intake')} />,
     today: <TodayScreen />,
     assistant: <AssistantScreen />,
     food: <FoodScreen />,
