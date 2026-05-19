@@ -1,17 +1,32 @@
 import { useEffect, useState } from 'react'
-import { seedLifeIntake, type LifeIntake } from '@vitapilot/core'
+import {
+  buildHealthContextGraph,
+  seedLifeIntake,
+  type HealthContextGraph,
+  type LifeIntake,
+} from '@vitapilot/core'
 import { vitaPilotRepository } from '../lib/repository'
+
+type GraphStatus = 'idle' | 'generating' | 'generated' | 'error'
 
 export function useLifeIntake() {
   const [intake, setIntake] = useState<LifeIntake>(seedLifeIntake)
+  const [healthContextGraph, setHealthContextGraph] = useState<HealthContextGraph | null>(null)
+  const [graphStatus, setGraphStatus] = useState<GraphStatus>('idle')
   const [isLoading, setIsLoading] = useState(true)
   const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved'>('idle')
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
-      vitaPilotRepository
-        .getLifeIntake()
-        .then(setIntake)
+      Promise.all([
+        vitaPilotRepository.getLifeIntake(),
+        vitaPilotRepository.getHealthContextGraph(),
+      ])
+        .then(([storedIntake, storedGraph]) => {
+          setIntake(storedIntake)
+          setHealthContextGraph(storedGraph)
+          setGraphStatus(storedGraph ? 'generated' : 'idle')
+        })
         .finally(() => setIsLoading(false))
     }, 0)
 
@@ -19,11 +34,13 @@ export function useLifeIntake() {
   }, [])
 
   const updateFreeform = (freeform: string) => {
+    setGraphStatus('idle')
     setSaveState('idle')
     setIntake((current) => ({ ...current, freeform }))
   }
 
   const toggleAnswer = (questionId: string, answer: string, allowMultiple: boolean) => {
+    setGraphStatus('idle')
     setSaveState('idle')
     setIntake((current) => {
       const existingResponse = current.responses.find((response) => response.questionId === questionId)
@@ -48,10 +65,23 @@ export function useLifeIntake() {
     const nextIntake = { ...intake, updatedAt: new Date().toISOString() }
     setSaveState('saving')
     setIntake(await vitaPilotRepository.saveLifeIntake(nextIntake))
+
+    try {
+      setGraphStatus('generating')
+      const graph = buildHealthContextGraph(nextIntake)
+      setHealthContextGraph(await vitaPilotRepository.saveHealthContextGraph(graph))
+      setGraphStatus('generated')
+    } catch {
+      setGraphStatus('error')
+    }
+
     setSaveState('saved')
   }
 
   return {
+    graphStatus,
+    hasGraph: healthContextGraph !== null,
+    healthContextGraph,
     intake,
     isLoading,
     saveIntake,
