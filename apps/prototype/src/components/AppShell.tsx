@@ -7,7 +7,14 @@ import {
   UserRound,
 } from 'lucide-react'
 import type { ReactNode } from 'react'
-import type { NavigationItem, TabId } from '../types/health'
+import type { LucideIcon } from 'lucide-react'
+import type { TabId } from '@vitapilot/core'
+
+interface NavigationItem {
+  id: TabId
+  label: string
+  icon: LucideIcon
+}
 
 const navigationItems: NavigationItem[] = [
   { id: 'today', label: 'Today', icon: CalendarDays },

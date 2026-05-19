@@ -1,6 +1,6 @@
 import { Filter, MapPin } from 'lucide-react'
 import { ScreenHeader } from '../components/ScreenHeader'
-import { localEvents, userProfile } from '../data/mockHealthPlan'
+import { localEvents, userProfile } from '@vitapilot/core'
 
 export function LocalScreen() {
   return (

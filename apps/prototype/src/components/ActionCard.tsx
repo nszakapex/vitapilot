@@ -1,5 +1,5 @@
 import { CheckCircle2, Clock3, Sparkles } from 'lucide-react'
-import type { HealthAction } from '../types/health'
+import type { HealthAction } from '@vitapilot/core'
 
 interface ActionCardProps {
   action: HealthAction

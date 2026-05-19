@@ -12,9 +12,7 @@ Mobile-first React + TypeScript framework for the AI health assistant concept.
 
 ## App Framework
 
-- `src/types/health.ts` defines product domain types.
-- `src/data/mockHealthPlan.ts` holds mock profile, plans, meals, workouts, events, prompts, and roadmap data.
-- `src/lib/coachCopy.ts` contains early assistant-copy helpers.
+- `../../packages/core` defines shared product domain types, mock data, and coach-copy helpers.
 - `src/components` contains app shell, metric, header, and action-card primitives.
 - `src/screens` contains the initial app surfaces: Today, Coach, Food, Fitness, Local, and Profile.
 
@@ -24,6 +22,12 @@ Mobile-first React + TypeScript framework for the AI health assistant concept.
 npm run dev
 npm run build
 npm run lint
+```
+
+From the repo root, prefer:
+
+```bash
+npm run dev:prototype
 ```
 
 The dev server is pinned to `http://127.0.0.1:5280` so it does not collide with other local Vite projects.

@@ -1,0 +1,17 @@
+{
+  "name": "vitapilot",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:prototype": "npm run dev --workspace @vitapilot/prototype",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "prototype:build": "npm run build --workspace @vitapilot/prototype",
+    "prototype:lint": "npm run lint --workspace @vitapilot/prototype"
+  }
+}

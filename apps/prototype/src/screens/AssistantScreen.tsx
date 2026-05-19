@@ -1,7 +1,6 @@
 import { SendHorizontal, ShieldCheck } from 'lucide-react'
 import { ScreenHeader } from '../components/ScreenHeader'
-import { assistantPrompts, userProfile } from '../data/mockHealthPlan'
-import { getSafetyCopy } from '../lib/coachCopy'
+import { assistantPrompts, getSafetyCopy, userProfile } from '@vitapilot/core'
 
 export function AssistantScreen() {
   return (

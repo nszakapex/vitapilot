@@ -7,7 +7,7 @@ import { FoodScreen } from './screens/FoodScreen'
 import { LocalScreen } from './screens/LocalScreen'
 import { ProfileScreen } from './screens/ProfileScreen'
 import { TodayScreen } from './screens/TodayScreen'
-import type { TabId } from './types/health'
+import type { TabId } from '@vitapilot/core'
 
 function App() {
   const [activeTab, setActiveTab] = useState<TabId>('today')

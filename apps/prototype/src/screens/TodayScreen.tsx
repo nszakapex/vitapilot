@@ -2,8 +2,13 @@ import { ArrowRight, RefreshCcw } from 'lucide-react'
 import { ActionCard } from '../components/ActionCard'
 import { MetricTile } from '../components/MetricTile'
 import { ScreenHeader } from '../components/ScreenHeader'
-import { dailyMetrics, todayActions, userProfile } from '../data/mockHealthPlan'
-import { buildDailyCoachNote, getSmallestUsefulAction } from '../lib/coachCopy'
+import {
+  buildDailyCoachNote,
+  dailyMetrics,
+  getSmallestUsefulAction,
+  todayActions,
+  userProfile,
+} from '@vitapilot/core'
 
 export function TodayScreen() {
   const smallestAction = getSmallestUsefulAction(todayActions)

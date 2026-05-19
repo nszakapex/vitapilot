@@ -1,6 +1,6 @@
 import { Camera, ClipboardList, ScanLine, ShoppingBasket } from 'lucide-react'
 import { ScreenHeader } from '../components/ScreenHeader'
-import { mealOptions } from '../data/mockHealthPlan'
+import { mealOptions } from '@vitapilot/core'
 
 export function FoodScreen() {
   return (

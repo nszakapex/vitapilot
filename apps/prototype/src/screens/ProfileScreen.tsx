@@ -1,6 +1,6 @@
 import { PlugZap, ShieldCheck } from 'lucide-react'
 import { ScreenHeader } from '../components/ScreenHeader'
-import { productRoadmap, userProfile } from '../data/mockHealthPlan'
+import { productRoadmap, userProfile } from '@vitapilot/core'
 
 export function ProfileScreen() {
   return (

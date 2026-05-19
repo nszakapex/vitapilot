@@ -2,7 +2,7 @@
 
 Date: May 19, 2026  
 Product working name: VitaPilot  
-Current state: Vite React demo at `health-ai-assistant-app`, useful as a product prototype and UX sketch, not yet the final production architecture.
+Current state: Vite React demo at `apps/prototype`, useful as a product prototype and UX sketch, not yet the final production architecture.
 
 ## 1. Strategic Call
 
@@ -632,4 +632,3 @@ The investor path is viable, but only if we prove this is not another wellness c
 The phrase to keep repeating:
 
 > We help people make the next healthy choice in the real world.
-

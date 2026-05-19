@@ -1,5 +1,3 @@
-import type { LucideIcon } from 'lucide-react'
-
 export type TabId = 'today' | 'assistant' | 'food' | 'fitness' | 'local' | 'profile'
 
 export type HealthArea =
@@ -83,10 +81,4 @@ export interface RoadmapItem {
   title: string
   status: 'mvp' | 'next' | 'later'
   detail: string
-}
-
-export interface NavigationItem {
-  id: TabId
-  label: string
-  icon: LucideIcon
 }

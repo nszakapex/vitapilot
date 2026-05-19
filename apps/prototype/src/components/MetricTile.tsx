@@ -1,4 +1,4 @@
-import type { DailyMetric } from '../types/health'
+import type { DailyMetric } from '@vitapilot/core'
 
 interface MetricTileProps {
   metric: DailyMetric

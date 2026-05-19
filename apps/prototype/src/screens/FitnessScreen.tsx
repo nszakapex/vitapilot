@@ -1,6 +1,6 @@
 import { Activity, TimerReset } from 'lucide-react'
 import { ScreenHeader } from '../components/ScreenHeader'
-import { workoutOptions } from '../data/mockHealthPlan'
+import { workoutOptions } from '@vitapilot/core'
 
 export function FitnessScreen() {
   return (
