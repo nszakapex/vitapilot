@@ -3,6 +3,8 @@ import type {
   DailyPlan,
   DailyMetric,
   HealthAction,
+  IntakeQuestion,
+  LifeIntake,
   LocalEvent,
   MealOption,
   RoadmapItem,
@@ -222,3 +224,72 @@ export const productRoadmap: RoadmapItem[] = [
     detail: 'Featured events, class bookings, and community challenges.',
   },
 ]
+
+export const intakeQuestions: IntakeQuestion[] = [
+  {
+    id: 'season',
+    category: 'life',
+    prompt: 'What season of life are you in right now?',
+    helper: 'This tells the app how ambitious or gentle the plan should be.',
+    options: ['Work is intense', 'School is chaotic', 'Family comes first', 'I have room to focus'],
+    allowMultiple: true,
+  },
+  {
+    id: 'friction',
+    category: 'life',
+    prompt: 'What usually breaks your health plan?',
+    helper: 'The assistant should design around the real obstacle, not the ideal day.',
+    options: ['Time', 'Stress', 'Eating out', 'Low energy', 'Cost', 'Conflicting advice'],
+    allowMultiple: true,
+  },
+  {
+    id: 'food-style',
+    category: 'food',
+    prompt: 'What food support would actually help?',
+    helper: 'Choose the decision points where food gets messy.',
+    options: ['Restaurant orders', 'Cheap groceries', 'High-protein meals', 'No tracking', 'Macro guidance', 'Pantry meals'],
+    allowMultiple: true,
+  },
+  {
+    id: 'movement-style',
+    category: 'movement',
+    prompt: 'What kind of movement feels realistic?',
+    helper: 'This keeps workouts from becoming a fantasy schedule.',
+    options: ['Short home workouts', 'Gym beginner plan', 'Walking', 'Strength training', 'Low-impact classes', 'Running/cardio'],
+    allowMultiple: true,
+  },
+  {
+    id: 'recovery',
+    category: 'recovery',
+    prompt: 'What recovery signal should the app respect most?',
+    helper: 'Plans should adapt to the stress and sleep pattern underneath the behavior.',
+    options: ['Poor sleep', 'Stress', 'Soreness', 'Long workdays', 'Travel', 'Mental fatigue'],
+    allowMultiple: true,
+  },
+  {
+    id: 'coach-tone',
+    category: 'motivation',
+    prompt: 'What coaching style keeps you moving?',
+    helper: 'Tone is part of personalization. The wrong voice makes people quit.',
+    options: ['Gentle', 'Direct', 'Analytical', 'Minimal'],
+    allowMultiple: false,
+  },
+  {
+    id: 'safety',
+    category: 'safety',
+    prompt: 'Anything the app should avoid or handle carefully?',
+    helper: 'The app should know where to slow down or recommend a professional.',
+    options: ['Injury limitation', 'Eating disorder history', 'Medical condition', 'Pregnancy/postpartum', 'Medication concern', 'None right now'],
+    allowMultiple: true,
+  },
+]
+
+export const seedLifeIntake: LifeIntake = {
+  freeform:
+    'Busy workdays, frequent restaurant meals, wants better energy without tracking every calorie. Prefers short workouts and no-shame resets after missed days.',
+  responses: intakeQuestions.map((question) => ({
+    answers: question.options.slice(0, question.allowMultiple ? 2 : 1),
+    questionId: question.id,
+  })),
+  updatedAt: new Date().toISOString(),
+}

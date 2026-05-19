@@ -4,15 +4,17 @@ import { AppShell } from './components/AppShell'
 import { AssistantScreen } from './screens/AssistantScreen'
 import { FitnessScreen } from './screens/FitnessScreen'
 import { FoodScreen } from './screens/FoodScreen'
+import { IntakeScreen } from './screens/IntakeScreen'
 import { LocalScreen } from './screens/LocalScreen'
 import { ProfileScreen } from './screens/ProfileScreen'
 import { TodayScreen } from './screens/TodayScreen'
 import type { TabId } from '@vitapilot/core'
 
 function App() {
-  const [activeTab, setActiveTab] = useState<TabId>('today')
+  const [activeTab, setActiveTab] = useState<TabId>('intake')
 
   const screens: Record<TabId, ReactNode> = {
+    intake: <IntakeScreen />,
     today: <TodayScreen />,
     assistant: <AssistantScreen />,
     food: <FoodScreen />,

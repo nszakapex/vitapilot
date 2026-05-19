@@ -3,6 +3,7 @@ import {
   CalendarDays,
   Dumbbell,
   Map,
+  NotebookPen,
   Salad,
   UserRound,
 } from 'lucide-react'
@@ -17,6 +18,7 @@ interface NavigationItem {
 }
 
 const navigationItems: NavigationItem[] = [
+  { id: 'intake', label: 'Intake', icon: NotebookPen },
   { id: 'today', label: 'Today', icon: CalendarDays },
   { id: 'assistant', label: 'Coach', icon: Bot },
   { id: 'food', label: 'Food', icon: Salad },

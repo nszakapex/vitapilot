@@ -1,12 +1,14 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import {
   seedDailyPlan,
+  seedLifeIntake,
   todayActions,
   userProfile,
   type ActionStatus,
   type DailyMetric,
   type DailyPlan,
   type HealthAction,
+  type LifeIntake,
   type UserProfile,
 } from '@vitapilot/core'
 
@@ -25,7 +27,9 @@ export interface DailyPlanSnapshot {
 
 export interface VitaPilotRepository {
   getDailyPlan(localDate: string): Promise<DailyPlanSnapshot>
+  getLifeIntake(): Promise<LifeIntake>
   saveActionStatus(localDate: string, actionId: string, status: ActionStatus): Promise<DailyPlanSnapshot>
+  saveLifeIntake(intake: LifeIntake): Promise<LifeIntake>
   saveProfile(profile: UserProfile): Promise<UserProfile>
 }
 
@@ -67,6 +71,7 @@ interface DailyActionRow {
 }
 
 const profileKey = 'vitapilot:profile'
+const intakeKey = 'vitapilot:life-intake'
 const planKey = (localDate: string) => `vitapilot:daily-plan:${localDate}`
 
 export function createVitaPilotRepository(
@@ -103,6 +108,11 @@ function createLocalRepository(storage: StorageLike | null): VitaPilotRepository
       writePlan(plan)
       return { plan, profile, source: 'local' }
     },
+    async getLifeIntake() {
+      const intake = readJson<LifeIntake>(storage, intakeKey) ?? seedLifeIntake
+      writeJson(storage, intakeKey, intake)
+      return intake
+    },
     async saveActionStatus(localDate, actionId, status) {
       const plan = readPlan(localDate)
       const updatedPlan = {
@@ -113,6 +123,10 @@ function createLocalRepository(storage: StorageLike | null): VitaPilotRepository
       }
       writePlan(updatedPlan)
       return { plan: updatedPlan, profile: readProfile(), source: 'local' }
+    },
+    async saveLifeIntake(intake) {
+      writeJson(storage, intakeKey, intake)
+      return intake
     },
     async saveProfile(profile) {
       writeJson(storage, profileKey, profile)
@@ -134,6 +148,9 @@ function createSupabaseRepository(
       const plan = await getOrCreateDailyPlan(supabase, userId, localDate)
       return { plan, profile, source: 'supabase' }
     },
+    async getLifeIntake() {
+      return localRepository.getLifeIntake()
+    },
     async saveActionStatus(localDate, actionId, status) {
       const userId = await getUserId(supabase)
       if (!userId) return localRepository.saveActionStatus(localDate, actionId, status)
@@ -148,6 +165,9 @@ function createSupabaseRepository(
       const profile = await getOrCreateProfile(supabase, userId)
       const updatedPlan = await getOrCreateDailyPlan(supabase, userId, localDate)
       return { plan: updatedPlan, profile, source: 'supabase' }
+    },
+    async saveLifeIntake(intake) {
+      return localRepository.saveLifeIntake(intake)
     },
     async saveProfile(profile) {
       const userId = await getUserId(supabase)

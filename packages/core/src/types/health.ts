@@ -1,4 +1,4 @@
-export type TabId = 'today' | 'assistant' | 'food' | 'fitness' | 'local' | 'profile'
+export type TabId = 'intake' | 'today' | 'assistant' | 'food' | 'fitness' | 'local' | 'profile'
 
 export type HealthArea =
   | 'nutrition'
@@ -89,4 +89,32 @@ export interface RoadmapItem {
   title: string
   status: 'mvp' | 'next' | 'later'
   detail: string
+}
+
+export type IntakeCategory =
+  | 'life'
+  | 'food'
+  | 'movement'
+  | 'recovery'
+  | 'motivation'
+  | 'safety'
+
+export interface IntakeQuestion {
+  id: string
+  category: IntakeCategory
+  prompt: string
+  helper: string
+  options: string[]
+  allowMultiple: boolean
+}
+
+export interface IntakeResponse {
+  questionId: string
+  answers: string[]
+}
+
+export interface LifeIntake {
+  freeform: string
+  responses: IntakeResponse[]
+  updatedAt: string
 }
