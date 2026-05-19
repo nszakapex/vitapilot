@@ -3,6 +3,7 @@ import type { HealthAction } from '@vitapilot/core'
 
 interface ActionCardProps {
   action: HealthAction
+  onActionClick?: (actionId: string) => void
 }
 
 const areaLabel: Record<HealthAction['area'], string> = {
@@ -14,8 +15,9 @@ const areaLabel: Record<HealthAction['area'], string> = {
   safety: 'Safety',
 }
 
-export function ActionCard({ action }: ActionCardProps) {
+export function ActionCard({ action, onActionClick }: ActionCardProps) {
   const StatusIcon = action.status === 'complete' ? CheckCircle2 : Clock3
+  const isComplete = action.status === 'complete'
 
   return (
     <article className={`action-card action-card--${action.area}`}>
@@ -33,7 +35,13 @@ export function ActionCard({ action }: ActionCardProps) {
           <Sparkles size={13} aria-hidden="true" />
           {action.evidence}
         </span>
-        <button type="button">{action.cta}</button>
+        <button
+          disabled={isComplete}
+          onClick={() => onActionClick?.(action.id)}
+          type="button"
+        >
+          {isComplete ? 'Done' : action.cta}
+        </button>
       </div>
     </article>
   )

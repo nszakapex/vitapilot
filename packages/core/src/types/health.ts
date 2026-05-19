@@ -42,6 +42,14 @@ export interface HealthAction {
   cta: string
 }
 
+export interface DailyPlan {
+  localDate: string
+  focus: string
+  metrics: DailyMetric[]
+  actions: HealthAction[]
+  weeklyPattern: string
+}
+
 export interface MealOption {
   id: string
   title: string

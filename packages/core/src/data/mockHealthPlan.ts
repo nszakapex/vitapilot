@@ -1,5 +1,6 @@
 import type {
   AssistantPrompt,
+  DailyPlan,
   DailyMetric,
   HealthAction,
   LocalEvent,
@@ -82,6 +83,14 @@ export const todayActions: HealthAction[] = [
     cta: 'View route',
   },
 ]
+
+export const seedDailyPlan: DailyPlan = {
+  localDate: new Date().toISOString().slice(0, 10),
+  focus: 'Steady energy, moderate movement, and one easy local win.',
+  metrics: dailyMetrics,
+  actions: todayActions,
+  weeklyPattern: 'Protect lunch, lower workout intensity on short-sleep days, add one local activity.',
+}
 
 export const mealOptions: MealOption[] = [
   {

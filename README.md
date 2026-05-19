@@ -26,6 +26,17 @@ npm run lint
 
 The prototype dev server is pinned to `http://127.0.0.1:5280`.
 
+## Supabase
+
+The schema starts in `supabase/migrations/20260519153000_initial_health_schema.sql`.
+
+The prototype uses a repository in `packages/data`. Without Supabase env vars it persists to browser local storage. With `apps/prototype/.env.local` configured, authenticated users can read and write through Supabase:
+
+```bash
+VITE_SUPABASE_URL=your_project_url
+VITE_SUPABASE_PUBLISHABLE_KEY=your_publishable_key
+```
+
 ## Current Status
 
 - Product strategy and investor roadmap are in `docs/product`.

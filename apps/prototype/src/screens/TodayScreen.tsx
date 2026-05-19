@@ -4,32 +4,35 @@ import { MetricTile } from '../components/MetricTile'
 import { ScreenHeader } from '../components/ScreenHeader'
 import {
   buildDailyCoachNote,
-  dailyMetrics,
   getSmallestUsefulAction,
-  todayActions,
-  userProfile,
 } from '@vitapilot/core'
+import { useDailyPlan } from '../hooks/useDailyPlan'
 
 export function TodayScreen() {
-  const smallestAction = getSmallestUsefulAction(todayActions)
+  const { error, isLoading, plan, profile, saveActionStatus } = useDailyPlan()
+  const smallestAction = getSmallestUsefulAction(plan.actions)
 
   return (
     <section className="screen-stack">
       <ScreenHeader
         eyebrow="Today"
-        title="Your next useful moves"
-        supporting={buildDailyCoachNote(userProfile, dailyMetrics)}
+        title={isLoading ? 'Loading your day' : 'Your next useful moves'}
+        supporting={error ?? buildDailyCoachNote(profile, plan.metrics)}
       />
 
       <section className="metric-grid" aria-label="Daily signals">
-        {dailyMetrics.map((metric) => (
+        {plan.metrics.map((metric) => (
           <MetricTile key={metric.label} metric={metric} />
         ))}
       </section>
 
       <section className="action-grid" aria-label="Recommended actions">
-        {todayActions.map((action) => (
-          <ActionCard key={action.id} action={action} />
+        {plan.actions.map((action) => (
+          <ActionCard
+            action={action}
+            key={action.id}
+            onActionClick={(actionId) => void saveActionStatus(actionId, 'complete')}
+          />
         ))}
       </section>
 
@@ -47,7 +50,7 @@ export function TodayScreen() {
       <section className="week-preview">
         <div>
           <span className="eyebrow">Weekly pattern</span>
-          <h2>Protect lunch, lower workout intensity on short-sleep days, add one local activity.</h2>
+          <h2>{plan.weeklyPattern}</h2>
         </div>
         <button className="text-button" type="button">
           Build week

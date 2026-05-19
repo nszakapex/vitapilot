@@ -9,5 +9,9 @@
       "default": "./src/index.ts"
     }
   },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.87.1",
+    "@vitapilot/core": "file:../core"
+  },
   "sideEffects": false
 }
