@@ -8,6 +8,7 @@ import {
   type DailyMetric,
   type DailyPlan,
   type HealthAction,
+  type HealthContextGraph,
   type LifeIntake,
   type UserProfile,
 } from '@vitapilot/core'
@@ -27,8 +28,10 @@ export interface DailyPlanSnapshot {
 
 export interface VitaPilotRepository {
   getDailyPlan(localDate: string): Promise<DailyPlanSnapshot>
+  getHealthContextGraph(): Promise<HealthContextGraph | null>
   getLifeIntake(): Promise<LifeIntake>
   saveActionStatus(localDate: string, actionId: string, status: ActionStatus): Promise<DailyPlanSnapshot>
+  saveHealthContextGraph(graph: HealthContextGraph): Promise<HealthContextGraph>
   saveLifeIntake(intake: LifeIntake): Promise<LifeIntake>
   saveProfile(profile: UserProfile): Promise<UserProfile>
 }
@@ -72,6 +75,7 @@ interface DailyActionRow {
 
 const profileKey = 'vitapilot:profile'
 const intakeKey = 'vitapilot:life-intake'
+const healthContextGraphKey = 'vitapilot:health-context-graph'
 const planKey = (localDate: string) => `vitapilot:daily-plan:${localDate}`
 
 export function createVitaPilotRepository(
@@ -108,6 +112,9 @@ function createLocalRepository(storage: StorageLike | null): VitaPilotRepository
       writePlan(plan)
       return { plan, profile, source: 'local' }
     },
+    async getHealthContextGraph() {
+      return readJson<HealthContextGraph>(storage, healthContextGraphKey)
+    },
     async getLifeIntake() {
       const intake = readJson<LifeIntake>(storage, intakeKey) ?? seedLifeIntake
       writeJson(storage, intakeKey, intake)
@@ -123,6 +130,10 @@ function createLocalRepository(storage: StorageLike | null): VitaPilotRepository
       }
       writePlan(updatedPlan)
       return { plan: updatedPlan, profile: readProfile(), source: 'local' }
+    },
+    async saveHealthContextGraph(graph) {
+      writeJson(storage, healthContextGraphKey, graph)
+      return graph
     },
     async saveLifeIntake(intake) {
       writeJson(storage, intakeKey, intake)
@@ -151,6 +162,9 @@ function createSupabaseRepository(
     async getLifeIntake() {
       return localRepository.getLifeIntake()
     },
+    async getHealthContextGraph() {
+      return localRepository.getHealthContextGraph()
+    },
     async saveActionStatus(localDate, actionId, status) {
       const userId = await getUserId(supabase)
       if (!userId) return localRepository.saveActionStatus(localDate, actionId, status)
@@ -165,6 +179,9 @@ function createSupabaseRepository(
       const profile = await getOrCreateProfile(supabase, userId)
       const updatedPlan = await getOrCreateDailyPlan(supabase, userId, localDate)
       return { plan: updatedPlan, profile, source: 'supabase' }
+    },
+    async saveHealthContextGraph(graph) {
+      return localRepository.saveHealthContextGraph(graph)
     },
     async saveLifeIntake(intake) {
       return localRepository.saveLifeIntake(intake)
