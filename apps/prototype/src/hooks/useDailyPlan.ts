@@ -90,6 +90,7 @@ export function useDailyPlan(localDate = currentLocalDate()) {
     saveActionStatus,
     saveProfile,
     source: snapshot.source,
+    usesGraphPlan,
   }
 }
 

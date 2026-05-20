@@ -9,7 +9,7 @@ import {
 import { useDailyPlan } from '../hooks/useDailyPlan'
 
 export function TodayScreen() {
-  const { error, isLoading, plan, profile, saveActionStatus } = useDailyPlan()
+  const { error, isLoading, plan, profile, saveActionStatus, usesGraphPlan } = useDailyPlan()
   const smallestAction = getSmallestUsefulAction(plan.actions)
 
   return (
@@ -19,6 +19,13 @@ export function TodayScreen() {
         title={isLoading ? 'Loading your day' : 'Your next useful moves'}
         supporting={error ?? buildDailyCoachNote(profile, plan.metrics)}
       />
+
+      {usesGraphPlan ? (
+        <section className="today-graph-badge" aria-label="Graph-powered plan status">
+          <span>Graph-powered plan</span>
+          <p>Based on your Health Context Graph.</p>
+        </section>
+      ) : null}
 
       <section className="metric-grid" aria-label="Daily signals">
         {plan.metrics.map((metric) => (

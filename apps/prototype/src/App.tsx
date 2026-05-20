@@ -15,7 +15,7 @@ function App() {
   const [activeTab, setActiveTab] = useState<TabId>('intake')
 
   const screens: Record<TabId, ReactNode> = {
-    intake: <IntakeScreen />,
+    intake: <IntakeScreen onOpenContext={() => setActiveTab('context')} />,
     context: <ContextGraphScreen onOpenIntake={() => setActiveTab('intake')} />,
     today: <TodayScreen />,
     assistant: <AssistantScreen />,

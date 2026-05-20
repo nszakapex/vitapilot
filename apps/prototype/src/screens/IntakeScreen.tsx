@@ -1,4 +1,4 @@
-import { FileText, Sparkles, Upload } from 'lucide-react'
+import { ArrowRight, CheckCircle2, FileText, Sparkles, Upload } from 'lucide-react'
 import { intakeQuestions } from '@vitapilot/core'
 import { ScreenHeader } from '../components/ScreenHeader'
 import { useLifeIntake } from '../hooks/useLifeIntake'
@@ -12,8 +12,14 @@ const categoryLabels = {
   safety: 'Safety',
 } as const
 
-export function IntakeScreen() {
+interface IntakeScreenProps {
+  onOpenContext: () => void
+}
+
+export function IntakeScreen({ onOpenContext }: IntakeScreenProps) {
   const {
+    graphStatus,
+    hasGraph,
     intake,
     isLoading,
     saveIntake,
@@ -27,6 +33,7 @@ export function IntakeScreen() {
 
   const selectedCount = intake.responses.reduce((total, response) => total + response.answers.length, 0)
   const contextScore = Math.min(100, selectedCount * 9 + Math.min(30, Math.floor(intake.freeform.length / 12)))
+  const showGraphSuccess = graphStatus === 'generated' || hasGraph
 
   return (
     <section className="screen-stack">
@@ -111,6 +118,25 @@ export function IntakeScreen() {
           {saveState === 'saving' ? 'Saving' : saveState === 'saved' ? 'Saved' : 'Save context'}
         </button>
       </section>
+
+      {showGraphSuccess ? (
+        <section className="intake-graph-success" aria-live="polite">
+          <div className="intake-graph-success__icon" aria-hidden="true">
+            <CheckCircle2 size={20} />
+          </div>
+          <div>
+            <span className="eyebrow">Assessment generated</span>
+            <h2>Your Health Context Graph is ready.</h2>
+            <p>
+              VitaPilot used your intake to identify your strengths, friction points, safety considerations, planning rules, and first-week plan.
+            </p>
+          </div>
+          <button className="text-button" onClick={onOpenContext} type="button">
+            View Context Graph
+            <ArrowRight size={17} aria-hidden="true" />
+          </button>
+        </section>
+      ) : null}
     </section>
   )
 }

@@ -267,6 +267,7 @@ small {
 .integration-strip,
 .intake-hero,
 .intake-save-strip,
+.intake-graph-success,
 .life-upload-panel__header,
 .upload-row,
 .safety-note,
@@ -358,6 +359,29 @@ small {
   border-radius: var(--radius);
   justify-content: space-between;
   padding: 18px;
+}
+
+.today-graph-badge {
+  align-items: center;
+  background: var(--blue-soft);
+  border: 1px solid rgba(39, 95, 143, 0.18);
+  border-radius: var(--radius);
+  display: flex;
+  gap: 10px;
+  justify-content: flex-start;
+  max-width: max-content;
+  padding: 10px 12px;
+}
+
+.today-graph-badge span {
+  color: var(--blue);
+  font-size: 0.76rem;
+  font-weight: 760;
+  text-transform: uppercase;
+}
+
+.today-graph-badge p {
+  font-size: 0.84rem;
 }
 
 .icon-button {
@@ -622,17 +646,42 @@ small {
 
 .integration-strip,
 .intake-save-strip,
+.intake-graph-success,
 .safety-note {
   justify-content: flex-start;
 }
 
 .intake-hero,
-.intake-save-strip {
+.intake-save-strip,
+.intake-graph-success {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   justify-content: space-between;
   padding: 18px;
+}
+
+.intake-graph-success {
+  background: linear-gradient(180deg, var(--surface) 0%, var(--green-soft) 180%);
+  border-color: rgba(29, 107, 82, 0.2);
+}
+
+.intake-graph-success__icon {
+  align-items: center;
+  background: var(--green);
+  border-radius: var(--radius);
+  color: #fff;
+  display: inline-flex;
+  flex-shrink: 0;
+  height: 42px;
+  justify-content: center;
+  width: 42px;
+}
+
+.intake-graph-success > div:nth-child(2) {
+  display: grid;
+  flex: 1;
+  gap: 4px;
 }
 
 .intake-score {
@@ -1249,6 +1298,8 @@ small {
   .daily-strip,
   .intake-hero,
   .intake-save-strip,
+  .intake-graph-success,
+  .today-graph-badge,
   .upload-row {
     align-items: flex-start;
     flex-direction: column;
