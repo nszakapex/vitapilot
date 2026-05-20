@@ -1,4 +1,5 @@
 export * from './data/mockHealthPlan'
+export * from './lib/buildDailyPlanFromGraph'
 export * from './lib/buildHealthContextGraph'
 export * from './lib/coachCopy'
 export * from './types/health'

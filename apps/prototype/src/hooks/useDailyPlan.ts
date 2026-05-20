@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
-import { seedDailyPlan, userProfile, type ActionStatus, type UserProfile } from '@vitapilot/core'
+import {
+  buildDailyPlanFromGraph,
+  seedDailyPlan,
+  userProfile,
+  type ActionStatus,
+  type UserProfile,
+} from '@vitapilot/core'
 import type { DailyPlanSnapshot } from '@vitapilot/data'
 import { vitaPilotRepository } from '../lib/repository'
 
@@ -13,6 +19,7 @@ const initialSnapshot: DailyPlanSnapshot = {
 
 export function useDailyPlan(localDate = currentLocalDate()) {
   const [snapshot, setSnapshot] = useState<DailyPlanSnapshot>(initialSnapshot)
+  const [usesGraphPlan, setUsesGraphPlan] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -20,7 +27,15 @@ export function useDailyPlan(localDate = currentLocalDate()) {
     try {
       setIsLoading(true)
       setError(null)
-      setSnapshot(await vitaPilotRepository.getDailyPlan(localDate))
+      const [dailyPlanSnapshot, graph] = await Promise.all([
+        vitaPilotRepository.getDailyPlan(localDate),
+        vitaPilotRepository.getHealthContextGraph(),
+      ])
+      setUsesGraphPlan(graph !== null)
+      setSnapshot({
+        ...dailyPlanSnapshot,
+        plan: graph ? buildDailyPlanFromGraph(graph, localDate) : dailyPlanSnapshot.plan,
+      })
     } catch (caughtError) {
       setError(caughtError instanceof Error ? caughtError.message : 'Unable to load daily plan')
     } finally {
@@ -46,6 +61,10 @@ export function useDailyPlan(localDate = currentLocalDate()) {
         ),
       },
     }))
+
+    if (usesGraphPlan) {
+      return
+    }
 
     setSnapshot(await vitaPilotRepository.saveActionStatus(localDate, actionId, status))
   }
