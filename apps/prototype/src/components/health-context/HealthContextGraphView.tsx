@@ -14,6 +14,34 @@ interface HealthContextGraphViewProps {
 export function HealthContextGraphView({ graph }: HealthContextGraphViewProps) {
   return (
     <div className="context-graph">
+      <section className="context-hero" aria-label="Health context graph overview">
+        <div>
+          <span className="eyebrow">Graph active</span>
+          <h2>Your assessment is now planning logic.</h2>
+          <p>
+            VitaPilot can use this graph to shape Today, respect safety boundaries, and keep the first week realistic.
+          </p>
+        </div>
+        <dl className="context-hero__stats">
+          <div>
+            <dt>Strengths</dt>
+            <dd>{graph.strengths.length}</dd>
+          </div>
+          <div>
+            <dt>Friction</dt>
+            <dd>{graph.frictionPoints.length}</dd>
+          </div>
+          <div>
+            <dt>Safety</dt>
+            <dd>{graph.safetyFlags.length}</dd>
+          </div>
+          <div>
+            <dt>Rules</dt>
+            <dd>{graph.planningRules.length}</dd>
+          </div>
+        </dl>
+      </section>
+
       <UserSnapshotCard snapshot={graph.userSnapshot} />
 
       <section className="context-section" aria-labelledby="strengths-title">
@@ -25,7 +53,7 @@ export function HealthContextGraphView({ graph }: HealthContextGraphViewProps) {
           <small>{graph.strengths.length} detected</small>
         </div>
         {graph.strengths.length > 0 ? (
-          <div className="context-grid">
+          <div className="context-card-grid context-grid">
             {graph.strengths.map((strength) => (
               <StrengthCard key={strength.id} strength={strength} />
             ))}
@@ -44,7 +72,7 @@ export function HealthContextGraphView({ graph }: HealthContextGraphViewProps) {
           <small>{graph.frictionPoints.length} detected</small>
         </div>
         {graph.frictionPoints.length > 0 ? (
-          <div className="context-grid context-grid--two">
+          <div className="context-card-grid context-grid context-grid--two">
             {graph.frictionPoints.map((frictionPoint) => (
               <FrictionPointCard key={frictionPoint.id} frictionPoint={frictionPoint} />
             ))}
@@ -63,7 +91,7 @@ export function HealthContextGraphView({ graph }: HealthContextGraphViewProps) {
           <small>{graph.safetyFlags.length} flagged</small>
         </div>
         {graph.safetyFlags.length > 0 ? (
-          <div className="context-grid context-grid--two">
+          <div className="context-card-grid context-grid context-grid--two">
             {graph.safetyFlags.map((safetyFlag) => (
               <SafetyFlagCard key={safetyFlag.id} safetyFlag={safetyFlag} />
             ))}
@@ -83,7 +111,7 @@ export function HealthContextGraphView({ graph }: HealthContextGraphViewProps) {
           </div>
           <small>{graph.planningRules.length} rules</small>
         </div>
-        <div className="context-grid">
+        <div className="context-card-grid context-grid">
           {graph.planningRules.map((rule) => (
             <PlanningRuleCard key={rule.id} rule={rule} />
           ))}

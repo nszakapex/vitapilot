@@ -6,7 +6,7 @@ interface UserSnapshotCardProps {
 
 export function UserSnapshotCard({ snapshot }: UserSnapshotCardProps) {
   return (
-    <section className="snapshot-card" aria-labelledby="context-summary-title">
+    <section className="context-summary-card snapshot-card" aria-labelledby="context-summary-title">
       <div className="context-section__header">
         <div>
           <span className="eyebrow">Understanding summary</span>

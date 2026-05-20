@@ -51,7 +51,7 @@ export function ContextGraphScreen({ onOpenIntake }: ContextGraphScreenProps) {
       ) : null}
 
       {status === 'empty' ? (
-        <section className="context-state">
+        <section className="empty-context-state context-state">
           <span className="eyebrow">No graph yet</span>
           <h2>Complete your intake to generate your Health Context Graph.</h2>
           <p>Go to Intake, add your life context, and save. VitaPilot will turn it into the structured plan logic shown here.</p>

@@ -4,6 +4,7 @@ import {
   seedDailyPlan,
   userProfile,
   type ActionStatus,
+  type DailyPlan,
   type UserProfile,
 } from '@vitapilot/core'
 import type { DailyPlanSnapshot } from '@vitapilot/data'
@@ -16,6 +17,8 @@ const initialSnapshot: DailyPlanSnapshot = {
   profile: userProfile,
   source: 'local',
 }
+
+type GraphActionStatusMap = Record<string, ActionStatus>
 
 export function useDailyPlan(localDate = currentLocalDate()) {
   const [snapshot, setSnapshot] = useState<DailyPlanSnapshot>(initialSnapshot)
@@ -31,10 +34,13 @@ export function useDailyPlan(localDate = currentLocalDate()) {
         vitaPilotRepository.getDailyPlan(localDate),
         vitaPilotRepository.getHealthContextGraph(),
       ])
+      const graphPlan = graph ? buildDailyPlanFromGraph(graph, localDate) : null
       setUsesGraphPlan(graph !== null)
       setSnapshot({
         ...dailyPlanSnapshot,
-        plan: graph ? buildDailyPlanFromGraph(graph, localDate) : dailyPlanSnapshot.plan,
+        plan: graphPlan
+          ? applyGraphActionStatuses(graphPlan, readGraphActionStatuses(localDate))
+          : dailyPlanSnapshot.plan,
       })
     } catch (caughtError) {
       setError(caughtError instanceof Error ? caughtError.message : 'Unable to load daily plan')
@@ -63,6 +69,7 @@ export function useDailyPlan(localDate = currentLocalDate()) {
     }))
 
     if (usesGraphPlan) {
+      writeGraphActionStatus(localDate, actionId, status)
       return
     }
 
@@ -83,5 +90,52 @@ export function useDailyPlan(localDate = currentLocalDate()) {
     saveActionStatus,
     saveProfile,
     source: snapshot.source,
+  }
+}
+
+function applyGraphActionStatuses(plan: DailyPlan, statuses: GraphActionStatusMap): DailyPlan {
+  return {
+    ...plan,
+    actions: plan.actions.map((action) => ({
+      ...action,
+      status: statuses[action.id] ?? action.status,
+    })),
+  }
+}
+
+function graphActionStatusKey(localDate: string) {
+  return `vitapilot:graph-action-status:${localDate}`
+}
+
+function readGraphActionStatuses(localDate: string): GraphActionStatusMap {
+  if (typeof window === 'undefined' || !('localStorage' in window)) {
+    return {}
+  }
+
+  try {
+    const value = window.localStorage.getItem(graphActionStatusKey(localDate))
+    if (!value) {
+      return {}
+    }
+
+    return JSON.parse(value) as GraphActionStatusMap
+  } catch {
+    return {}
+  }
+}
+
+function writeGraphActionStatus(localDate: string, actionId: string, status: ActionStatus) {
+  if (typeof window === 'undefined' || !('localStorage' in window)) {
+    return
+  }
+
+  try {
+    const statuses = readGraphActionStatuses(localDate)
+    window.localStorage.setItem(
+      graphActionStatusKey(localDate),
+      JSON.stringify({ ...statuses, [actionId]: status }),
+    )
+  } catch {
+    return
   }
 }

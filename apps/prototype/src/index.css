@@ -757,12 +757,53 @@ small {
 }
 
 .context-hero {
+  align-items: end;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
+  gap: 20px;
   grid-template-columns: minmax(0, 1fr) max-content;
   padding: 20px;
+}
+
+.context-hero h2 {
+  font-size: 1.38rem;
+}
+
+.context-hero p {
+  max-width: 68ch;
+}
+
+.context-hero__stats {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(4, minmax(74px, 1fr));
+  margin: 0;
+}
+
+.context-hero__stats div {
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  padding: 10px;
+}
+
+.context-hero__stats dt {
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 760;
+  text-transform: uppercase;
+}
+
+.context-hero__stats dd {
+  color: var(--ink);
+  font-size: 1.24rem;
+  font-weight: 760;
+  margin: 0;
 }
 
 .context-summary-card,
@@ -1047,7 +1088,6 @@ small {
 }
 
 .first-week-action-grid article,
-.confidence-panel,
 .confidence-column {
   display: grid;
   gap: 10px;
@@ -1181,6 +1221,7 @@ small {
   .snapshot-metrics,
   .snapshot-patterns,
   .context-hero,
+  .context-hero__stats,
   .context-card-grid,
   .context-grid,
   .context-grid--two,

@@ -6,7 +6,7 @@ interface ConfidencePanelProps {
 
 export function ConfidencePanel({ confidence }: ConfidencePanelProps) {
   return (
-    <section className="context-section" aria-labelledby="confidence-title">
+    <section className="confidence-panel context-section" aria-labelledby="confidence-title">
       <div className="context-section__header">
         <div>
           <span className="eyebrow">Confidence and missing info</span>

@@ -48,7 +48,7 @@ export function FirstWeekPlanCard({ plan }: FirstWeekPlanCardProps) {
 
       <div className="first-week-grid" aria-label="Daily first week plan">
         {plan.dailyPlan.map((day) => (
-          <article className="first-week-day" key={day.dayNumber}>
+          <article className="first-week-day-card first-week-day" key={day.dayNumber}>
             <header>
               <span>Day {day.dayNumber}</span>
               <small>{day.estimatedTime}</small>

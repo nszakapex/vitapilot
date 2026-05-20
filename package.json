@@ -12,6 +12,7 @@
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "prototype:build": "npm run build --workspace @vitapilot/prototype",
-    "prototype:lint": "npm run lint --workspace @vitapilot/prototype"
+    "prototype:lint": "npm run lint --workspace @vitapilot/prototype",
+    "verify:context-graph": "node scripts/verify-health-context-graph.mjs"
   }
 }
