@@ -107,7 +107,7 @@ export function HealthContextGraphView({ graph }: HealthContextGraphViewProps) {
         <div className="context-section__header">
           <div>
             <span className="eyebrow">Planning rules</span>
-            <h2 id="planning-rules-title">How the assistant should adapt meals, movement, and recovery</h2>
+            <h2 id="planning-rules-title">How the planner should adapt meals, movement, and recovery</h2>
           </div>
           <small>{graph.planningRules.length} rules</small>
         </div>

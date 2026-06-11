@@ -5,12 +5,14 @@ import { ScreenHeader } from '../components/ScreenHeader'
 import {
   buildDailyCoachNote,
   getSmallestUsefulAction,
+  hasHighRiskMedicalBoundary,
 } from '@vitapilot/core'
 import { useDailyPlan } from '../hooks/useDailyPlan'
 
 export function TodayScreen() {
-  const { error, isLoading, plan, profile, saveActionStatus, usesGraphPlan } = useDailyPlan()
+  const { error, graph, isLoading, plan, profile, saveActionStatus, usesGraphPlan } = useDailyPlan()
   const smallestAction = getSmallestUsefulAction(plan.actions)
+  const showMedicalSafetyBanner = usesGraphPlan && hasHighRiskMedicalBoundary(graph)
 
   return (
     <section className="screen-stack">
@@ -25,6 +27,15 @@ export function TodayScreen() {
           <span>Graph-powered plan</span>
           <p>Today's actions are based on your intake, friction points, and safety boundaries.</p>
         </section>
+      ) : null}
+
+      {showMedicalSafetyBanner ? (
+        <aside className="today-safety-banner" role="status">
+          <span>Safety boundary active</span>
+          <p>
+            Your graph includes symptoms or limitations that call for conservative guidance. If symptoms are current, severe, unexplained, or urgent, seek medical or emergency care.
+          </p>
+        </aside>
       ) : null}
 
       <section className="metric-grid" aria-label="Daily signals">
@@ -49,7 +60,7 @@ export function TodayScreen() {
           <h2>{smallestAction.title}</h2>
           <p>{smallestAction.why}</p>
         </div>
-        <button className="icon-button" type="button" title="Swap action">
+        <button className="icon-button icon-button--disabled" disabled type="button" title="Swap coming later">
           <RefreshCcw size={18} aria-hidden="true" />
         </button>
       </section>
@@ -59,8 +70,8 @@ export function TodayScreen() {
           <span className="eyebrow">Weekly pattern</span>
           <h2>{plan.weeklyPattern}</h2>
         </div>
-        <button className="text-button" type="button">
-          Build week
+        <button className="text-button text-button--disabled" disabled type="button">
+          Weekly planning coming later
           <ArrowRight size={17} aria-hidden="true" />
         </button>
       </section>

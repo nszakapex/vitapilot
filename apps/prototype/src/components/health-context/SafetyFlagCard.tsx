@@ -28,7 +28,7 @@ export function SafetyFlagCard({ safetyFlag }: SafetyFlagCardProps) {
         </div>
         <div>
           <dt>Blocked recommendation types</dt>
-          <dd>{safetyFlag.blockedRecommendationTypes.map(formatLabel).join(', ') || 'None'}</dd>
+          <dd>{safetyFlag.blockedRecommendationTypes.map(formatBlockedRecommendationType).join(', ') || 'None'}</dd>
         </div>
       </dl>
     </article>
@@ -41,4 +41,14 @@ function getBadgeClass(value: string) {
 
 function formatLabel(value: string) {
   return value.replace(/_/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase())
+}
+
+function formatBlockedRecommendationType(value: string) {
+  const labels: Record<string, string> = {
+    calorie_restriction: 'Pressure-based food targets',
+    fasting: 'Skipped-meal protocols',
+    weigh_in_pressure: 'Scale-pressure prompts',
+  }
+
+  return labels[value] ?? formatLabel(value)
 }

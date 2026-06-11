@@ -15,6 +15,15 @@ const areaLabel: Record<HealthAction['area'], string> = {
   safety: 'Safety',
 }
 
+const completionLabel: Record<HealthAction['area'], string> = {
+  nutrition: 'Mark meal anchor done',
+  movement: 'Mark movement done',
+  recovery: 'Mark recovery done',
+  habit: 'Mark reset done',
+  local: 'Mark local action done',
+  safety: 'Mark safety step done',
+}
+
 export function ActionCard({ action, onActionClick }: ActionCardProps) {
   const StatusIcon = action.status === 'complete' ? CheckCircle2 : Clock3
   const isComplete = action.status === 'complete'
@@ -40,7 +49,7 @@ export function ActionCard({ action, onActionClick }: ActionCardProps) {
           onClick={() => onActionClick?.(action.id)}
           type="button"
         >
-          {isComplete ? 'Done' : action.cta}
+          {isComplete ? 'Done' : completionLabel[action.area]}
         </button>
       </div>
     </article>

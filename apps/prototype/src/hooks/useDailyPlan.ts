@@ -5,6 +5,7 @@ import {
   userProfile,
   type ActionStatus,
   type DailyPlan,
+  type HealthContextGraph,
   type UserProfile,
 } from '@vitapilot/core'
 import type { DailyPlanSnapshot } from '@vitapilot/data'
@@ -22,6 +23,7 @@ type GraphActionStatusMap = Record<string, ActionStatus>
 
 export function useDailyPlan(localDate = currentLocalDate()) {
   const [snapshot, setSnapshot] = useState<DailyPlanSnapshot>(initialSnapshot)
+  const [healthContextGraph, setHealthContextGraph] = useState<HealthContextGraph | null>(null)
   const [usesGraphPlan, setUsesGraphPlan] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -35,6 +37,7 @@ export function useDailyPlan(localDate = currentLocalDate()) {
         vitaPilotRepository.getHealthContextGraph(),
       ])
       const graphPlan = graph ? buildDailyPlanFromGraph(graph, localDate) : null
+      setHealthContextGraph(graph)
       setUsesGraphPlan(graph !== null)
       setSnapshot({
         ...dailyPlanSnapshot,
@@ -43,6 +46,7 @@ export function useDailyPlan(localDate = currentLocalDate()) {
           : dailyPlanSnapshot.plan,
       })
     } catch (caughtError) {
+      setHealthContextGraph(null)
       setError(caughtError instanceof Error ? caughtError.message : 'Unable to load daily plan')
     } finally {
       setIsLoading(false)
@@ -83,6 +87,7 @@ export function useDailyPlan(localDate = currentLocalDate()) {
 
   return {
     error,
+    graph: healthContextGraph,
     isLoading,
     plan: snapshot.plan,
     profile: snapshot.profile,

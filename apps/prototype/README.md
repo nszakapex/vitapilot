@@ -1,6 +1,6 @@
-# VitaPilot AI Health Assistant
+# VitaPilot Graph-Aware Health Planning Prototype
 
-Mobile-first React + TypeScript framework for the AI health assistant concept.
+Mobile-first React + TypeScript framework for the graph-aware health planning prototype.
 
 ## Stack
 

@@ -73,13 +73,13 @@ export function IntakeScreen({ onOpenContext }: IntakeScreenProps) {
         <textarea
           aria-label="Life context"
           onChange={(event) => updateFreeform(event.target.value)}
-          placeholder="Example: I work late three nights a week, eat out for lunch, hate calorie tracking, have a cranky knee, and usually fall off after a stressful weekend..."
+          placeholder="Example: I work late three nights a week, eat out for lunch, hate detailed tracking, have a cranky knee, and usually fall off after a stressful weekend..."
           value={intake.freeform}
         />
         <div className="upload-row">
-          <button className="tool-button" type="button">
+          <button className="tool-button tool-button--disabled" disabled type="button">
             <Upload size={18} aria-hidden="true" />
-            Upload later
+            Upload support coming later
           </button>
           <p>Document/image upload is staged for V2. For now, paste text so the planning logic can use it.</p>
         </div>

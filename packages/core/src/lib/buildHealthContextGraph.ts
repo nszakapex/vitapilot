@@ -526,7 +526,7 @@ export function detectSafetyFlags(
     mentions(freeform, eatingBehaviorPhrases)
   ) {
     safetyFlags.push(createSafetyFlag({
-      appBehaviorRule: 'Do not recommend calorie counting, aggressive restriction, weigh-in pressure, compensatory exercise, or fasting protocols.',
+      appBehaviorRule: 'Keep food guidance steady, neutral, flexible, and free of pressure-based targets or compensatory exercise.',
       blockedRecommendationTypes: ['calorie_restriction', 'fasting', 'weigh_in_pressure'],
       category: 'eating_behavior',
       description: 'The intake suggests eating-behavior sensitivity.',
@@ -534,7 +534,7 @@ export function detectSafetyFlags(
       id: 'eating-behavior-risk',
       riskLevel: 'high',
       title: 'Eating-behavior guardrail',
-      userFacingLanguage: 'I will avoid restrictive dieting language and recommend licensed support for eating-disorder concerns.',
+      userFacingLanguage: 'I will keep food guidance steady and neutral, and recommend licensed support for eating-disorder concerns.',
     }))
   }
 
@@ -736,11 +736,11 @@ export function createPlanningRules(
   if (hasSafetyFlag(safetyFlags, 'eating-behavior-risk')) {
     rules.push(createPlanningRule({
       appliesTo: 'safety',
-      description: 'Avoid calorie-counting, aggressive restriction, or weigh-in pressure.',
+      description: 'Use steady, neutral meal guidance without pressure-based targets.',
       example: 'Use plate-method meals, regular eating rhythm, and neutral food language.',
       id: 'avoid-restrictive-dieting',
       priority: 'critical',
-      title: 'Avoid restrictive dieting',
+      title: 'Steady food guardrail',
     }))
   }
 
@@ -926,7 +926,7 @@ export function createFirstWeekPlan(
       hasPoorSleep ? 'Treat poor sleep as a reason to lower intensity, not to skip health entirely.' : recoveryBase,
       hasInconsistency ? 'Use a minimum viable reset after missed days.' : 'Use a small reset after stressful days.',
     ],
-    reflectionAction: 'At the end of the week, answer: what was easy, what got in the way, and what should the assistant change?',
+    reflectionAction: 'At the end of the week, answer: what was easy, what got in the way, and what should the planner change?',
   }
 }
 

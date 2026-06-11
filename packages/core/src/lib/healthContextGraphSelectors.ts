@@ -18,6 +18,18 @@ export function hasSafetyFlag(graph: HealthContextGraph | null, flagId: string) 
   return Boolean(graph?.safetyFlags.some((flag) => flag.id === flagId))
 }
 
+export function hasEatingBehaviorGuardrail(graph: HealthContextGraph | null) {
+  return hasSafetyCategory(graph, 'eating_behavior') ||
+    hasBlockedRecommendation(graph, 'calorie_restriction') ||
+    hasBlockedRecommendation(graph, 'fasting') ||
+    hasBlockedRecommendation(graph, 'weigh_in_pressure')
+}
+
+export function hasHighRiskMedicalBoundary(graph: HealthContextGraph | null) {
+  return hasSafetyFlag(graph, 'urgent-medical-symptom') ||
+    Boolean(graph?.safetyFlags.some((flag) => flag.category === 'medical' && flag.riskLevel === 'high'))
+}
+
 export function hasPlanningRule(graph: HealthContextGraph | null, ruleId: string) {
   return Boolean(graph?.planningRules.some((rule) => rule.id === ruleId))
 }

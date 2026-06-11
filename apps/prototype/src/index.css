@@ -345,10 +345,24 @@ small {
 
 .action-card button:disabled,
 .profile-form button:disabled,
-.tool-button:disabled {
+.tool-button:disabled,
+.text-button:disabled,
+.icon-button:disabled {
   cursor: default;
   opacity: 0.64;
   transform: none;
+}
+
+.text-button--disabled,
+.icon-button--disabled {
+  background: var(--surface-soft);
+  border-color: var(--line);
+  color: var(--muted);
+}
+
+.text-button--danger {
+  border-color: rgba(163, 74, 61, 0.24);
+  color: var(--coral);
 }
 
 .daily-strip,
@@ -385,6 +399,28 @@ small {
   font-size: 0.84rem;
 }
 
+.today-safety-banner {
+  background: var(--coral-soft);
+  border: 1px solid rgba(163, 74, 61, 0.24);
+  border-radius: var(--radius);
+  display: grid;
+  gap: 4px;
+  max-width: 760px;
+  padding: 14px 16px;
+}
+
+.today-safety-banner span {
+  color: var(--coral);
+  font-size: 0.76rem;
+  font-weight: 760;
+  text-transform: uppercase;
+}
+
+.today-safety-banner p {
+  color: var(--ink);
+  font-size: 0.92rem;
+}
+
 .graph-aware-panel,
 .graph-empty-note {
   align-items: center;
@@ -395,6 +431,52 @@ small {
   gap: 16px;
   justify-content: space-between;
   padding: 18px;
+}
+
+.local-preview-panel,
+.local-safety-note,
+.profile-clarity-card,
+.prototype-data-panel {
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 18px;
+}
+
+.local-preview-panel {
+  background: linear-gradient(180deg, var(--surface) 0%, var(--gold-soft) 190%);
+  border-color: rgba(137, 101, 30, 0.2);
+}
+
+.local-preview-panel > div,
+.profile-clarity-card > div,
+.prototype-data-panel > div {
+  display: grid;
+  gap: 4px;
+}
+
+.local-safety-note {
+  background: var(--blue-soft);
+  border-color: rgba(39, 95, 143, 0.2);
+  color: var(--blue);
+  justify-content: flex-start;
+}
+
+.local-safety-note p {
+  color: var(--ink);
+}
+
+.profile-clarity-card {
+  background: linear-gradient(180deg, var(--surface) 0%, var(--blue-soft) 190%);
+  border-color: rgba(39, 95, 143, 0.18);
+}
+
+.prototype-data-panel {
+  background: var(--surface-soft);
 }
 
 .intake-stale-note {
@@ -1532,6 +1614,10 @@ small {
   .graph-aware-panel,
   .graph-empty-note,
   .context-loop-card,
+  .local-preview-panel,
+  .local-safety-note,
+  .profile-clarity-card,
+  .prototype-data-panel,
   .upload-row {
     align-items: flex-start;
     flex-direction: column;

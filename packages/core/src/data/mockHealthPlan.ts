@@ -14,11 +14,11 @@ import type {
 
 export const userProfile: UserProfile = {
   name: 'Alex',
-  primaryGoal: 'Build steady energy and lose weight without obsessive tracking',
+  primaryGoal: 'Build steady energy with realistic food, movement, and recovery',
   secondaryGoal: 'Get stronger with short, realistic workouts',
   coachStyle: 'gentle',
   constraints: ['busy workdays', 'eats out often', 'limited weeknight cooking'],
-  foodPreferences: ['high-protein', 'no shellfish', 'budget-aware', 'coffee before noon'],
+  foodPreferences: ['steady meal anchors', 'no shellfish', 'budget-aware', 'coffee before noon'],
   fitnessReality: ['gym beginner', 'has dumbbells at home', 'prefers walks on tired days'],
   locationLabel: 'Denver, CO',
 }
@@ -43,24 +43,24 @@ export const dailyMetrics: DailyMetric[] = [
     tone: 'steady',
   },
   {
-    label: 'Protein',
-    value: '38g',
-    detail: 'Aim for 45g more',
+    label: 'Meal anchor',
+    value: 'Lunch',
+    detail: 'Steady choice open',
     tone: 'good',
   },
 ]
 
 export const todayActions: HealthAction[] = [
   {
-    id: 'protein-lunch',
+    id: 'steady-lunch',
     area: 'nutrition',
-    title: 'Protein-forward lunch',
-    why: 'You slept short, so a steady lunch helps curb afternoon snack drift.',
+    title: 'Steady lunch anchor',
+    why: 'You slept short, so a steady lunch helps the afternoon feel less chaotic.',
     duration: '12 min',
     effort: 'low',
     status: 'ready',
     evidence: 'practical',
-    cta: 'See meals',
+    cta: 'Mark meal anchor done',
   },
   {
     id: 'short-strength',
@@ -71,7 +71,7 @@ export const todayActions: HealthAction[] = [
     effort: 'medium',
     status: 'scheduled',
     evidence: 'strong',
-    cta: 'Start plan',
+    cta: 'Mark movement done',
   },
   {
     id: 'local-walk',
@@ -82,7 +82,7 @@ export const todayActions: HealthAction[] = [
     effort: 'low',
     status: 'ready',
     evidence: 'strong',
-    cta: 'View route',
+    cta: 'Mark local action done',
   },
 ]
 
@@ -188,7 +188,7 @@ export const assistantPrompts: AssistantPrompt[] = [
   {
     id: 'trend',
     label: 'Trend check',
-    prompt: 'Is the high-protein TikTok breakfast trend actually useful for me?',
+    prompt: 'Is this trending breakfast actually useful for my routine?',
   },
 ]
 
@@ -201,9 +201,9 @@ export const productRoadmap: RoadmapItem[] = [
   },
   {
     id: 'mvp-assistant',
-    title: 'Structured AI assistant',
+    title: 'Structured coach assistant prototype',
     status: 'mvp',
-    detail: 'Conversation grounded in profile, safety rules, and plan state.',
+    detail: 'Deterministic guidance grounded in profile, safety rules, and plan state.',
   },
   {
     id: 'next-menu',
@@ -238,7 +238,7 @@ export const intakeQuestions: IntakeQuestion[] = [
     id: 'friction',
     category: 'life',
     prompt: 'What usually breaks your health plan?',
-    helper: 'The assistant should design around the real obstacle, not the ideal day.',
+    helper: 'The planning logic should design around the real obstacle, not the ideal day.',
     options: ['Time', 'Stress', 'Eating out', 'Low energy', 'Cost', 'Conflicting advice'],
     allowMultiple: true,
   },
@@ -247,7 +247,7 @@ export const intakeQuestions: IntakeQuestion[] = [
     category: 'food',
     prompt: 'What food support would actually help?',
     helper: 'Choose the decision points where food gets messy.',
-    options: ['Restaurant orders', 'Cheap groceries', 'High-protein meals', 'No tracking', 'Macro guidance', 'Pantry meals'],
+    options: ['Restaurant orders', 'Cheap groceries', 'Steady meals', 'No tracking', 'Plate method', 'Pantry meals'],
     allowMultiple: true,
   },
   {
@@ -286,7 +286,7 @@ export const intakeQuestions: IntakeQuestion[] = [
 
 export const seedLifeIntake: LifeIntake = {
   freeform:
-    'Busy workdays, frequent restaurant meals, wants better energy without tracking every calorie. Prefers short workouts and no-shame resets after missed days.',
+    'Busy workdays, frequent restaurant meals, wants better energy without detailed tracking. Prefers short workouts and no-shame resets after missed days.',
   responses: intakeQuestions.map((question) => ({
     answers: question.options.slice(0, question.allowMultiple ? 2 : 1),
     questionId: question.id,

@@ -1,11 +1,12 @@
-import { Brain, NotebookPen, ShieldCheck } from 'lucide-react'
+import { Brain, NotebookPen, RotateCcw, ShieldCheck } from 'lucide-react'
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import type { HealthContextGraph, UserProfile } from '@vitapilot/core'
-import { strongestSafetyFlag } from '@vitapilot/core'
+import { hasEatingBehaviorGuardrail, strongestSafetyFlag } from '@vitapilot/core'
 import { ScreenHeader } from '../components/ScreenHeader'
 import { useDailyPlan } from '../hooks/useDailyPlan'
 import { useHealthContextGraph } from '../hooks/useHealthContextGraph'
+import { vitaPilotRepository } from '../lib/repository'
 
 interface ProfileScreenProps {
   onOpenIntake?: () => void
@@ -16,6 +17,8 @@ export function ProfileScreen({ onOpenIntake }: ProfileScreenProps) {
   const { error, graph, status } = useHealthContextGraph()
   const [saveState, setSaveState] = useState<'idle' | 'saved' | 'saving'>('idle')
   const hasGraph = status === 'ready' && graph !== null
+  const usesGentleProfileLanguage = hasEatingBehaviorGuardrail(graph)
+  const displayedProfile = usesGentleProfileLanguage ? createGentleProfile(profile) : profile
 
   const handleSave = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -33,6 +36,14 @@ export function ProfileScreen({ onOpenIntake }: ProfileScreenProps) {
     setSaveState('saved')
   }
 
+  const handleResetDemoData = async () => {
+    const confirmed = window.confirm('Reset VitaPilot demo data saved in this browser? This only clears VitaPilot local prototype data.')
+    if (!confirmed) return
+
+    await vitaPilotRepository.resetLocalDemoData()
+    window.location.reload()
+  }
+
   return (
     <section className="screen-stack">
       <ScreenHeader
@@ -41,11 +52,15 @@ export function ProfileScreen({ onOpenIntake }: ProfileScreenProps) {
         supporting={hasGraph ? graph.userSnapshot.summary : profile.primaryGoal}
       />
 
-      <form className="profile-form" onSubmit={(event) => void handleSave(event)}>
+      <form
+        className="profile-form"
+        key={usesGentleProfileLanguage ? 'gentle-profile-form' : 'standard-profile-form'}
+        onSubmit={(event) => void handleSave(event)}
+      >
         <label>
           Name
           <input
-            defaultValue={profile.name}
+            defaultValue={displayedProfile.name}
             name="name"
             onChange={() => setSaveState('idle')}
             type="text"
@@ -54,7 +69,7 @@ export function ProfileScreen({ onOpenIntake }: ProfileScreenProps) {
         <label>
           Primary goal
           <input
-            defaultValue={profile.primaryGoal}
+            defaultValue={displayedProfile.primaryGoal}
             name="primaryGoal"
             onChange={() => setSaveState('idle')}
             type="text"
@@ -63,7 +78,7 @@ export function ProfileScreen({ onOpenIntake }: ProfileScreenProps) {
         <label>
           Secondary goal
           <input
-            defaultValue={profile.secondaryGoal}
+            defaultValue={displayedProfile.secondaryGoal}
             name="secondaryGoal"
             onChange={() => setSaveState('idle')}
             type="text"
@@ -72,7 +87,7 @@ export function ProfileScreen({ onOpenIntake }: ProfileScreenProps) {
         <label>
           Location
           <input
-            defaultValue={profile.locationLabel}
+            defaultValue={displayedProfile.locationLabel}
             name="locationLabel"
             onChange={() => setSaveState('idle')}
             type="text"
@@ -82,6 +97,20 @@ export function ProfileScreen({ onOpenIntake }: ProfileScreenProps) {
           {saveState === 'saving' ? 'Saving' : saveState === 'saved' ? 'Saved' : 'Save profile'}
         </button>
       </form>
+
+      <section className="profile-clarity-card" aria-label="Profile and graph relationship">
+        <div>
+          <span className="eyebrow">Profile and graph</span>
+          <h2>Profile basics are separate from your Context Graph.</h2>
+          <p>To update your graph and plan logic, edit your Intake.</p>
+        </div>
+        {onOpenIntake ? (
+          <button className="text-button" onClick={onOpenIntake} type="button">
+            <NotebookPen size={16} aria-hidden="true" />
+            Edit Intake
+          </button>
+        ) : null}
+      </section>
 
       {hasGraph ? (
         <GraphProfileSummary graph={graph} onOpenIntake={onOpenIntake} />
@@ -100,6 +129,18 @@ export function ProfileScreen({ onOpenIntake }: ProfileScreenProps) {
         </section>
       )}
 
+      <section className="prototype-data-panel" aria-label="Prototype data controls">
+        <div>
+          <span className="eyebrow">Prototype data</span>
+          <h2>Local browser storage only</h2>
+          <p>Prototype data note: your intake, graph, profile, and completed actions are saved in this browser's local storage for demo purposes.</p>
+        </div>
+        <button className="text-button text-button--danger" onClick={() => void handleResetDemoData()} type="button">
+          <RotateCcw size={16} aria-hidden="true" />
+          Reset demo data
+        </button>
+      </section>
+
       <section className="profile-grid" aria-label="Profile basics">
         <article>
           <h2>Constraints</h2>
@@ -112,7 +153,7 @@ export function ProfileScreen({ onOpenIntake }: ProfileScreenProps) {
         <article>
           <h2>Food</h2>
           <div className="tag-list">
-            {profile.foodPreferences.map((item) => (
+            {displayedProfile.foodPreferences.map((item) => (
               <span key={item}>{item}</span>
             ))}
           </div>
@@ -260,4 +301,14 @@ function formatDate(value: string) {
 
 function formatLabel(value: string) {
   return value.replace(/_/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase())
+}
+
+function createGentleProfile(profile: UserProfile): UserProfile {
+  return {
+    ...profile,
+    foodPreferences: profile.foodPreferences.map((item) =>
+      item.toLowerCase().includes('protein') ? 'steady meal anchors' : item,
+    ),
+    primaryGoal: 'Build steady energy with supportive food, movement, recovery, and consistency.',
+  }
 }

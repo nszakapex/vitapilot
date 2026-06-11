@@ -2,6 +2,7 @@ import { SendHorizontal, ShieldCheck } from 'lucide-react'
 import type { FormEvent } from 'react'
 import {
   assistantPrompts,
+  hasEatingBehaviorGuardrail,
   graphHasFriction,
   hasSafetyCategory,
   hasSafetyFlag,
@@ -119,6 +120,7 @@ export function AssistantScreen({ onOpenIntake }: AssistantScreenProps) {
 
 function createGraphPrompts(graph: HealthContextGraph): AssistantPrompt[] {
   const prompts: AssistantPrompt[] = []
+  const usesGentleFoodLanguage = hasEatingBehaviorGuardrail(graph)
 
   if (graphHasFriction(graph, 'time-pressure')) {
     prompts.push({
@@ -132,7 +134,9 @@ function createGraphPrompts(graph: HealthContextGraph): AssistantPrompt[] {
     prompts.push({
       id: 'restaurant-order',
       label: 'Restaurant',
-      prompt: 'Help me make a better restaurant order without tracking calories.',
+      prompt: usesGentleFoodLanguage
+        ? 'Help me choose a supportive restaurant meal that feels steady.'
+        : 'Help me make a better restaurant order without detailed tracking.',
     })
   }
 
@@ -152,11 +156,11 @@ function createGraphPrompts(graph: HealthContextGraph): AssistantPrompt[] {
     })
   }
 
-  if (hasSafetyCategory(graph, 'eating_behavior')) {
+  if (usesGentleFoodLanguage) {
     prompts.push({
       id: 'steady-meal',
       label: 'Steady meal',
-      prompt: 'Help me build a steady meal without restriction.',
+      prompt: 'Help me build a steady, supportive meal.',
     })
   }
 
@@ -214,12 +218,14 @@ function createWatchedItems(graph: HealthContextGraph) {
 }
 
 function createDeterministicCoachReply(graph: HealthContextGraph) {
+  const usesGentleFoodLanguage = hasEatingBehaviorGuardrail(graph)
+
   if (hasSafetyFlag(graph, 'urgent-medical-symptom')) {
     return 'Keep today conservative. For urgent, current, severe, or unexplained symptoms, use urgent or emergency medical care. VitaPilot will not push intense workouts from this graph.'
   }
 
-  if (hasSafetyCategory(graph, 'eating_behavior')) {
-    return 'Pick one steady meal anchor and one easy reset. The graph keeps food guidance neutral and avoids turning the day into a tracking exercise.'
+  if (usesGentleFoodLanguage) {
+    return 'Pick one steady meal anchor and one easy reset. The graph keeps food guidance neutral, flexible, and supportive.'
   }
 
   if (hasSafetyCategory(graph, 'injury')) {

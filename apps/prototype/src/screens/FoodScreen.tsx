@@ -10,9 +10,9 @@ import {
   Utensils,
 } from 'lucide-react'
 import {
+  hasEatingBehaviorGuardrail,
   graphHasFriction,
   hasPlanningRule,
-  hasSafetyCategory,
   mealOptions,
   type HealthContextGraph,
 } from '@vitapilot/core'
@@ -42,8 +42,9 @@ const foodTools = [
 export function FoodScreen({ onOpenIntake }: FoodScreenProps) {
   const { error, graph, status } = useHealthContextGraph()
   const hasGraph = status === 'ready' && graph !== null
+  const usesGentleFoodLanguage = hasEatingBehaviorGuardrail(graph)
   const guidanceCards = hasGraph ? createFoodGuidanceCards(graph) : []
-  const modes = hasGraph ? createFoodModes(graph) : ['No tracking', 'Light check-in', 'Macro view']
+  const modes = hasGraph ? createFoodModes(graph) : ['Steady meals', 'Plate method', 'Light check-in']
 
   return (
     <section className="screen-stack">
@@ -59,10 +60,10 @@ export function FoodScreen({ onOpenIntake }: FoodScreenProps) {
         <section className="graph-aware-panel" aria-label="Graph-aware food guidance">
           <div>
             <span className="eyebrow">Graph-aware food</span>
-            <h2>{hasSafetyCategory(graph, 'eating_behavior') ? 'Steady meal anchors first' : 'Food cards matched to your context'}</h2>
+            <h2>{usesGentleFoodLanguage ? 'Steady meal anchors first' : 'Food cards matched to your context'}</h2>
             <p>
-              {hasSafetyCategory(graph, 'eating_behavior')
-                ? 'VitaPilot keeps food guidance steady, neutral, and non-punitive for this graph.'
+              {usesGentleFoodLanguage
+                ? 'VitaPilot keeps food guidance steady, neutral, and non-punitive for this graph. No restriction required.'
                 : 'VitaPilot is using your intake friction points and planning rules before showing meal options.'}
             </p>
           </div>
@@ -132,12 +133,10 @@ export function FoodScreen({ onOpenIntake }: FoodScreenProps) {
             <div>
               <span className="eyebrow">{meal.context}</span>
               <h2>{meal.title}</h2>
-              <p>
-                {meal.protein} protein, {meal.prepTime}
-              </p>
+              <p>{formatMealMeta(meal, usesGentleFoodLanguage)}</p>
             </div>
             <div className="tag-list">
-              {meal.tags.map((tag) => (
+              {mealTags(meal.tags, usesGentleFoodLanguage).map((tag) => (
                 <span key={tag}>{tag}</span>
               ))}
             </div>
@@ -149,7 +148,7 @@ export function FoodScreen({ onOpenIntake }: FoodScreenProps) {
 }
 
 function createFoodModes(graph: HealthContextGraph) {
-  if (hasSafetyCategory(graph, 'eating_behavior')) return ['Steady meals', 'Plate method', 'Gentle check-in']
+  if (hasEatingBehaviorGuardrail(graph)) return ['Steady meals', 'Regular rhythm', 'Gentle check-in']
   if (graphHasFriction(graph, 'restaurant-dependence')) return ['Restaurant anchors', 'No tracking', 'Pantry fallback']
   if (graphHasFriction(graph, 'budget-pressure')) return ['Budget anchors', 'Leftovers', 'Simple staples']
   if (graphHasFriction(graph, 'travel-disruption')) return ['Travel defaults', 'Restaurant anchors', 'Hydration']
@@ -160,8 +159,9 @@ function createFoodModes(graph: HealthContextGraph) {
 
 function createFoodGuidanceCards(graph: HealthContextGraph): FoodGuidanceCard[] {
   const cards: FoodGuidanceCard[] = []
+  const usesGentleFoodLanguage = hasEatingBehaviorGuardrail(graph)
 
-  if (hasSafetyCategory(graph, 'eating_behavior')) {
+  if (usesGentleFoodLanguage) {
     cards.push({
       detail: 'Use regular meals, neutral language, and enough flexibility to avoid turning food into pressure.',
       icon: ShieldCheck,
@@ -173,7 +173,9 @@ function createFoodGuidanceCards(graph: HealthContextGraph): FoodGuidanceCard[] 
 
   if (graphHasFriction(graph, 'restaurant-dependence')) {
     cards.push({
-      detail: 'Choose a familiar order with a protein anchor, fiber or plants, and a side that keeps the meal easy to repeat.',
+      detail: usesGentleFoodLanguage
+        ? 'Choose a familiar steady order that feels supportive, repeatable, and free of restriction pressure.'
+        : 'Choose a familiar order with a protein anchor, fiber or plants, and a side that keeps the meal easy to repeat.',
       icon: Utensils,
       id: 'restaurant-order-anchor',
       tag: 'Restaurants',
@@ -232,4 +234,20 @@ function createFoodGuidanceCards(graph: HealthContextGraph): FoodGuidanceCard[] 
   }
 
   return cards.slice(0, 4)
+}
+
+function formatMealMeta(meal: (typeof mealOptions)[number], usesGentleFoodLanguage: boolean) {
+  if (usesGentleFoodLanguage) {
+    return `Steady option, ${meal.prepTime}`
+  }
+
+  return `${meal.protein} protein, ${meal.prepTime}`
+}
+
+function mealTags(tags: string[], usesGentleFoodLanguage: boolean) {
+  if (!usesGentleFoodLanguage) return tags
+
+  return tags
+    .filter((tag) => !tag.toLowerCase().includes('protein'))
+    .map((tag) => tag === 'sleep-friendly' ? 'gentle evening option' : tag)
 }

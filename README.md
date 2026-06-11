@@ -1,6 +1,6 @@
 # VitaPilot
 
-VitaPilot is an AI health assistant concept for real-life daily decisions: what to eat, how to move, how to recover, and which local healthy action is worth doing today.
+VitaPilot is a graph-aware health planning assistant prototype for real-life daily decisions: what to eat, how to move, how to recover, and which local healthy action is worth doing today.
 
 ## Workspace
 

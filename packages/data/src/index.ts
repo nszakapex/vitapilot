@@ -30,6 +30,7 @@ export interface VitaPilotRepository {
   getDailyPlan(localDate: string): Promise<DailyPlanSnapshot>
   getHealthContextGraph(): Promise<HealthContextGraph | null>
   getLifeIntake(): Promise<LifeIntake>
+  resetLocalDemoData(): Promise<void>
   saveActionStatus(localDate: string, actionId: string, status: ActionStatus): Promise<DailyPlanSnapshot>
   saveHealthContextGraph(graph: HealthContextGraph): Promise<HealthContextGraph>
   saveLifeIntake(intake: LifeIntake): Promise<LifeIntake>
@@ -38,6 +39,9 @@ export interface VitaPilotRepository {
 
 interface StorageLike {
   getItem(key: string): string | null
+  key?(index: number): string | null
+  readonly length?: number
+  removeItem?(key: string): void
   setItem(key: string, value: string): void
 }
 
@@ -77,6 +81,7 @@ const profileKey = 'vitapilot:profile'
 const intakeKey = 'vitapilot:life-intake'
 const healthContextGraphKey = 'vitapilot:health-context-graph'
 const planKey = (localDate: string) => `vitapilot:daily-plan:${localDate}`
+const localStorageKeyPrefix = 'vitapilot:'
 
 export function createVitaPilotRepository(
   environment: SupabaseEnvironment = {},
@@ -119,6 +124,9 @@ function createLocalRepository(storage: StorageLike | null): VitaPilotRepository
       const intake = readJson<LifeIntake>(storage, intakeKey) ?? seedLifeIntake
       writeJson(storage, intakeKey, intake)
       return intake
+    },
+    async resetLocalDemoData() {
+      removePrefixedKeys(storage, localStorageKeyPrefix)
     },
     async saveActionStatus(localDate, actionId, status) {
       const plan = readPlan(localDate)
@@ -164,6 +172,9 @@ function createSupabaseRepository(
     },
     async getHealthContextGraph() {
       return localRepository.getHealthContextGraph()
+    },
+    async resetLocalDemoData() {
+      return localRepository.resetLocalDemoData()
     },
     async saveActionStatus(localDate, actionId, status) {
       const userId = await getUserId(supabase)
@@ -387,4 +398,19 @@ function readJson<T>(storage: StorageLike | null, key: string): T | null {
 function writeJson<T>(storage: StorageLike | null, key: string, value: T) {
   if (!storage) return
   storage.setItem(key, JSON.stringify(value))
+}
+
+function removePrefixedKeys(storage: StorageLike | null, prefix: string) {
+  if (!storage?.removeItem || !storage.key || typeof storage.length !== 'number') return
+
+  const keys: string[] = []
+
+  for (let index = 0; index < storage.length; index += 1) {
+    const key = storage.key(index)
+    if (key?.startsWith(prefix)) {
+      keys.push(key)
+    }
+  }
+
+  keys.forEach((key) => storage.removeItem?.(key))
 }
