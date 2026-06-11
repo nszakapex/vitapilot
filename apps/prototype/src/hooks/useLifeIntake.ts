@@ -13,6 +13,7 @@ export function useLifeIntake() {
   const [intake, setIntake] = useState<LifeIntake>(seedLifeIntake)
   const [healthContextGraph, setHealthContextGraph] = useState<HealthContextGraph | null>(null)
   const [graphStatus, setGraphStatus] = useState<GraphStatus>('idle')
+  const [isGraphStale, setIsGraphStale] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved'>('idle')
 
@@ -26,6 +27,7 @@ export function useLifeIntake() {
           setIntake(storedIntake)
           setHealthContextGraph(storedGraph)
           setGraphStatus(storedGraph ? 'generated' : 'idle')
+          setIsGraphStale(false)
         })
         .finally(() => setIsLoading(false))
     }, 0)
@@ -35,12 +37,14 @@ export function useLifeIntake() {
 
   const updateFreeform = (freeform: string) => {
     setGraphStatus('idle')
+    setIsGraphStale(healthContextGraph !== null)
     setSaveState('idle')
     setIntake((current) => ({ ...current, freeform }))
   }
 
   const toggleAnswer = (questionId: string, answer: string, allowMultiple: boolean) => {
     setGraphStatus('idle')
+    setIsGraphStale(healthContextGraph !== null)
     setSaveState('idle')
     setIntake((current) => {
       const existingResponse = current.responses.find((response) => response.questionId === questionId)
@@ -70,6 +74,7 @@ export function useLifeIntake() {
       setGraphStatus('generating')
       const graph = buildHealthContextGraph(nextIntake)
       setHealthContextGraph(await vitaPilotRepository.saveHealthContextGraph(graph))
+      setIsGraphStale(false)
       setGraphStatus('generated')
     } catch {
       setGraphStatus('error')
@@ -83,6 +88,7 @@ export function useLifeIntake() {
     hasGraph: healthContextGraph !== null,
     healthContextGraph,
     intake,
+    isGraphStale,
     isLoading,
     saveIntake,
     saveState,

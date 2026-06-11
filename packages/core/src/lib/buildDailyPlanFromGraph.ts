@@ -58,8 +58,14 @@ function createNutritionAction(
   const restaurantRule = findRule(planningRules, 'restaurant-guidance')
   const noTrackingRule = findRule(planningRules, 'no-tracking-nutrition')
   const restrictionRule = findRule(planningRules, 'avoid-restrictive-dieting')
+  const budgetRule = findRule(planningRules, 'budget-meal-anchors')
+  const travelRule = findRule(planningRules, 'travel-safe-defaults')
 
-  if (restrictionRule || hasSafetyCategory(safetyFlags, 'eating_behavior')) {
+  if (
+    restrictionRule ||
+    hasSafetyCategory(safetyFlags, 'eating_behavior') ||
+    hasBlockedRecommendation(safetyFlags, 'calorie_restriction')
+  ) {
     return {
       area: 'nutrition',
       cta: 'Pick meal',
@@ -69,7 +75,35 @@ function createNutritionAction(
       id: `graph-nutrition-${localDate}`,
       status: 'ready',
       title: 'Choose a steady meal anchor',
-      why: `Use ${day.nutritionFocus.toLowerCase()} without calorie pressure, restriction, or compensation language.`,
+      why: `Use ${day.nutritionFocus.toLowerCase()} with a steady rhythm and neutral food language.`,
+    }
+  }
+
+  if (budgetRule) {
+    return {
+      area: 'nutrition',
+      cta: 'Pick anchor',
+      duration: '8-12 min',
+      effort: 'low',
+      evidence: 'practical',
+      id: `graph-nutrition-${localDate}`,
+      status: 'ready',
+      title: 'Choose one budget-simple meal anchor',
+      why: `${budgetRule.description} Today's food focus: ${day.nutritionFocus}.`,
+    }
+  }
+
+  if (travelRule) {
+    return {
+      area: 'nutrition',
+      cta: 'Choose default',
+      duration: '5-10 min',
+      effort: 'low',
+      evidence: 'practical',
+      id: `graph-nutrition-${localDate}`,
+      status: 'ready',
+      title: 'Pick a travel-safe meal default',
+      why: `${travelRule.description} Today's food focus: ${day.nutritionFocus}.`,
     }
   }
 
@@ -121,12 +155,31 @@ function createMovementAction(
   localDate: string,
 ): HealthAction {
   const injuryRule = findRule(planningRules, 'avoid-high-impact')
+  const urgentMedicalRule = findRule(planningRules, 'urgent-medical-conservative-plan')
   const lowRecoveryRule = findRule(planningRules, 'low-recovery-workout-cap')
+  const lowEnergyRule = findRule(planningRules, 'low-energy-intensity-cap')
   const beginnerRule = findRule(planningRules, 'beginner-progressive-workouts')
+  const noGymRule = findRule(planningRules, 'no-gym-movement')
+  const shortScheduleRule = findRule(planningRules, 'short-weekday-actions')
   const hasMedicalBoundary = hasSafetyCategory(safetyFlags, 'medical')
   const hasPregnancyBoundary = hasSafetyCategory(safetyFlags, 'pregnancy_postpartum')
+  const blocksIntenseWorkouts = hasBlockedRecommendation(safetyFlags, 'intense_workouts')
 
-  if (injuryRule || hasMedicalBoundary || hasPregnancyBoundary) {
+  if (urgentMedicalRule) {
+    return {
+      area: 'movement',
+      cta: 'Keep gentle',
+      duration: '5-10 min',
+      effort: 'low',
+      evidence: 'practical',
+      id: `graph-movement-${localDate}`,
+      status: 'ready',
+      title: 'Keep movement conservative today',
+      why: `${urgentMedicalRule.example} Avoid intense workouts and use professional guidance for symptoms or medical limits.`,
+    }
+  }
+
+  if (injuryRule || hasMedicalBoundary || hasPregnancyBoundary || blocksIntenseWorkouts) {
     return {
       area: 'movement',
       cta: 'Start gentle',
@@ -140,7 +193,7 @@ function createMovementAction(
     }
   }
 
-  if (lowRecoveryRule) {
+  if (lowRecoveryRule || lowEnergyRule) {
     return {
       area: 'movement',
       cta: 'Keep it light',
@@ -150,7 +203,21 @@ function createMovementAction(
       id: `graph-movement-${localDate}`,
       status: 'scheduled',
       title: 'Cap intensity today',
-      why: `${lowRecoveryRule.description} Today's movement focus: ${day.movementFocus}.`,
+      why: `${(lowRecoveryRule ?? lowEnergyRule)?.description} Today's movement focus: ${day.movementFocus}.`,
+    }
+  }
+
+  if (noGymRule) {
+    return {
+      area: 'movement',
+      cta: 'Use no equipment',
+      duration: shortScheduleRule ? '8-15 min' : '10-20 min',
+      effort: 'low',
+      evidence: movementEvidence(day),
+      id: `graph-movement-${localDate}`,
+      status: 'scheduled',
+      title: 'Use a no-gym movement option',
+      why: `${noGymRule.description} Today's movement focus: ${day.movementFocus}.`,
     }
   }
 
@@ -158,7 +225,7 @@ function createMovementAction(
     return {
       area: 'movement',
       cta: 'Start plan',
-      duration: '15-25 min',
+      duration: shortScheduleRule ? '10-15 min' : '15-25 min',
       effort: 'medium',
       evidence: 'practical',
       id: `graph-movement-${localDate}`,
@@ -171,8 +238,8 @@ function createMovementAction(
   return {
     area: 'movement',
     cta: 'Move today',
-    duration: shortDuration(day.estimatedTime),
-    effort: 'medium',
+    duration: shortScheduleRule ? '10-15 min' : shortDuration(day.estimatedTime),
+    effort: shortScheduleRule ? 'low' : 'medium',
     evidence: movementEvidence(day),
     id: `graph-movement-${localDate}`,
     status: 'scheduled',
@@ -189,8 +256,9 @@ function createRecoveryAction(
 ): HealthAction {
   const decisionRule = findRule(planningRules, 'reduce-decision-load')
   const scheduleRule = findRule(planningRules, 'short-weekday-actions')
+  const minimumRule = findRule(planningRules, 'minimum-viable-habits')
   const hasSafety = safetyFlags.length > 0
-  const area = decisionRule || scheduleRule ? 'habit' : 'recovery'
+  const area = decisionRule || scheduleRule || minimumRule ? 'habit' : 'recovery'
 
   return {
     area,
@@ -200,7 +268,7 @@ function createRecoveryAction(
     evidence: recoveryEvidence(day),
     id: `graph-${area}-${localDate}`,
     status: 'ready',
-    title: decisionRule ? 'Do the smallest useful reset' : "Protect tonight's recovery cue",
+    title: decisionRule || minimumRule ? 'Do the smallest useful reset' : "Protect tonight's recovery cue",
     why: `${day.recoveryFocus}. Optional bonus: ${day.optionalBonus}.`,
   }
 }
@@ -261,6 +329,13 @@ function hasSafetyCategory(
   category: HealthContextSafetyFlag['category'],
 ) {
   return safetyFlags.some((flag) => flag.category === category)
+}
+
+function hasBlockedRecommendation(
+  safetyFlags: HealthContextSafetyFlag[],
+  recommendationType: string,
+) {
+  return safetyFlags.some((flag) => flag.blockedRecommendationTypes.includes(recommendationType))
 }
 
 function movementEvidence(day: FirstWeekDay): HealthAction['evidence'] {

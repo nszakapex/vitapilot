@@ -23,7 +23,7 @@ export function TodayScreen() {
       {usesGraphPlan ? (
         <section className="today-graph-badge" aria-label="Graph-powered plan status">
           <span>Graph-powered plan</span>
-          <p>Based on your Health Context Graph.</p>
+          <p>Today's actions are based on your intake, friction points, and safety boundaries.</p>
         </section>
       ) : null}
 

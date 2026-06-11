@@ -18,11 +18,11 @@ function App() {
     intake: <IntakeScreen onOpenContext={() => setActiveTab('context')} />,
     context: <ContextGraphScreen onOpenIntake={() => setActiveTab('intake')} />,
     today: <TodayScreen />,
-    assistant: <AssistantScreen />,
-    food: <FoodScreen />,
-    fitness: <FitnessScreen />,
+    assistant: <AssistantScreen onOpenIntake={() => setActiveTab('intake')} />,
+    food: <FoodScreen onOpenIntake={() => setActiveTab('intake')} />,
+    fitness: <FitnessScreen onOpenIntake={() => setActiveTab('intake')} />,
     local: <LocalScreen />,
-    profile: <ProfileScreen />,
+    profile: <ProfileScreen onOpenIntake={() => setActiveTab('intake')} />,
   }
 
   return (

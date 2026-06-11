@@ -344,7 +344,8 @@ small {
 }
 
 .action-card button:disabled,
-.profile-form button:disabled {
+.profile-form button:disabled,
+.tool-button:disabled {
   cursor: default;
   opacity: 0.64;
   transform: none;
@@ -369,7 +370,7 @@ small {
   display: flex;
   gap: 10px;
   justify-content: flex-start;
-  max-width: max-content;
+  max-width: 680px;
   padding: 10px 12px;
 }
 
@@ -382,6 +383,209 @@ small {
 
 .today-graph-badge p {
   font-size: 0.84rem;
+}
+
+.graph-aware-panel,
+.graph-empty-note {
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 18px;
+}
+
+.intake-stale-note {
+  background: var(--gold-soft);
+  border: 1px solid rgba(137, 101, 30, 0.22);
+  border-radius: var(--radius);
+  color: var(--gold);
+  font-size: 0.92rem;
+  font-weight: 680;
+  padding: 12px 14px;
+}
+
+.context-loop-card {
+  align-items: center;
+  background: linear-gradient(180deg, var(--surface) 0%, var(--green-soft) 190%);
+  border: 1px solid rgba(29, 107, 82, 0.2);
+  border-radius: var(--radius);
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 18px;
+}
+
+.context-loop-card > div {
+  display: grid;
+  gap: 4px;
+}
+
+.context-state__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.graph-aware-panel {
+  background: linear-gradient(180deg, var(--surface) 0%, var(--blue-soft) 190%);
+  border-color: rgba(39, 95, 143, 0.18);
+}
+
+.graph-empty-note {
+  background: var(--surface-soft);
+}
+
+.graph-aware-panel > div,
+.graph-empty-note > div {
+  display: grid;
+  gap: 4px;
+}
+
+.graph-aware-pill {
+  background: var(--ink);
+  border-radius: 999px;
+  color: #fff;
+  flex-shrink: 0;
+  font-size: 0.78rem;
+  font-weight: 740;
+  padding: 7px 10px;
+  text-transform: capitalize;
+}
+
+.graph-recommendation-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.graph-recommendation-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  display: grid;
+  gap: 12px;
+  min-height: 178px;
+  padding: 16px;
+}
+
+.graph-recommendation-card__icon {
+  align-items: center;
+  background: var(--green-soft);
+  border-radius: var(--radius);
+  color: var(--green);
+  display: inline-flex;
+  height: 34px;
+  justify-content: center;
+  width: 34px;
+}
+
+.graph-recommendation-card > div:last-child {
+  display: grid;
+  gap: 5px;
+}
+
+.graph-recommendation-card p {
+  font-size: 0.9rem;
+}
+
+.coach-watch-grid,
+.profile-graph-metrics,
+.profile-graph-columns {
+  display: grid;
+  gap: 12px;
+}
+
+.coach-watch-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.coach-watch-grid article,
+.profile-graph-summary,
+.profile-graph-metrics article,
+.profile-graph-columns article {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.coach-watch-grid article,
+.profile-graph-metrics article,
+.profile-graph-columns article {
+  display: grid;
+  gap: 6px;
+  min-height: 132px;
+  padding: 16px;
+}
+
+.profile-graph-summary {
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+}
+
+.profile-graph-summary__header,
+.profile-graph-footer {
+  align-items: center;
+  display: flex;
+  gap: 14px;
+  justify-content: space-between;
+}
+
+.profile-graph-summary__header > div {
+  display: grid;
+  gap: 4px;
+}
+
+.profile-graph-metrics {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.profile-graph-metrics span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 720;
+}
+
+.profile-graph-metrics strong {
+  font-size: 0.95rem;
+}
+
+.profile-graph-columns {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.profile-graph-columns ul {
+  color: var(--muted);
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+}
+
+.profile-graph-columns li {
+  display: grid;
+  gap: 3px;
+  list-style: none;
+}
+
+.profile-graph-columns li strong {
+  font-size: 0.92rem;
+}
+
+.profile-graph-columns li span {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.profile-graph-footer {
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.84rem;
+  justify-content: flex-start;
+  padding-top: 14px;
 }
 
 .icon-button {
@@ -430,8 +634,20 @@ small {
 }
 
 .tool-button {
+  flex-wrap: wrap;
   justify-content: center;
   min-height: 52px;
+}
+
+.tool-button small {
+  color: var(--muted);
+  flex-basis: 100%;
+  font-size: 0.72rem;
+  line-height: 1;
+}
+
+.tool-button--disabled {
+  background: var(--surface-soft);
 }
 
 .prompt-card,
@@ -637,6 +853,15 @@ small {
 
 .profile-form input:focus {
   border-color: rgba(29, 107, 82, 0.55);
+}
+
+.composer--disabled {
+  opacity: 0.72;
+}
+
+.composer--disabled input,
+.composer--disabled button {
+  cursor: default;
 }
 
 .profile-form button {
@@ -1269,6 +1494,7 @@ small {
   .map-surface,
   .snapshot-metrics,
   .snapshot-patterns,
+  .coach-watch-grid,
   .context-hero,
   .context-hero__stats,
   .context-card-grid,
@@ -1277,6 +1503,9 @@ small {
   .first-week-grid,
   .first-week-summary,
   .first-week-action-grid,
+  .graph-recommendation-grid,
+  .profile-graph-metrics,
+  .profile-graph-columns,
   .context-callout-grid,
   .confidence-panel,
   .confidence-grid {
@@ -1300,6 +1529,9 @@ small {
   .intake-save-strip,
   .intake-graph-success,
   .today-graph-badge,
+  .graph-aware-panel,
+  .graph-empty-note,
+  .context-loop-card,
   .upload-row {
     align-items: flex-start;
     flex-direction: column;
@@ -1311,6 +1543,8 @@ small {
 
   .context-section__header,
   .context-card__header,
+  .profile-graph-summary__header,
+  .profile-graph-footer,
   .context-footer {
     align-items: flex-start;
     flex-direction: column;

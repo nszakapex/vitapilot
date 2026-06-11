@@ -43,7 +43,7 @@ export function AppShell({ activeTab, onTabChange, children }: AppShellProps) {
           <span className="brand-mark">V</span>
           <div>
             <strong>VitaPilot</strong>
-            <small>AI health OS</small>
+            <small>Health context OS</small>
           </div>
         </div>
 

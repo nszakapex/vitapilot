@@ -1,5 +1,7 @@
 export type ContextConfidence = 'low' | 'medium' | 'high'
 
+export type HealthContextGraphSource = 'deterministic' | 'ai_assisted'
+
 export type ReadinessLevel = 'low' | 'moderate' | 'high'
 
 export type StartingIntensity = 'low' | 'moderate' | 'high'
@@ -82,6 +84,7 @@ export interface HealthContextSafetyFlag {
   description: string
   riskLevel: ContextConfidence
   category: SafetyFlagCategory
+  blockedRecommendationTypes: string[]
   appBehaviorRule: string
   userFacingLanguage: string
   disclaimerLevel: DisclaimerLevel
@@ -129,6 +132,8 @@ export interface HealthContextConfidence {
 
 export interface HealthContextGraph {
   id: string
+  schemaVersion: string
+  source: HealthContextGraphSource
   generatedAt: string
   sourceIntakeUpdatedAt: string
   userSnapshot: UserSnapshot

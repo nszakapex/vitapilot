@@ -21,6 +21,7 @@ export function IntakeScreen({ onOpenContext }: IntakeScreenProps) {
     graphStatus,
     hasGraph,
     intake,
+    isGraphStale,
     isLoading,
     saveIntake,
     saveState,
@@ -40,20 +41,26 @@ export function IntakeScreen({ onOpenContext }: IntakeScreenProps) {
       <ScreenHeader
         eyebrow="Life intake"
         title="Tell the app how your real life works"
-        supporting="This is the difference between a generic wellness app and a coach that knows when restaurant meals, stress, budget, injuries, and motivation actually show up."
+        supporting="Save intake to generate or update your Health Context Graph for Today, Food, Fitness, Coach, and Profile."
       />
 
       <section className="intake-hero">
         <div>
           <span className="eyebrow">Personalization depth</span>
           <h2>{isLoading ? 'Loading your context' : `${contextScore}% context captured`}</h2>
-          <p>The assistant should use this context before it recommends meals, workouts, local events, or reset plans.</p>
+          <p>The graph identifies strengths, friction points, safety considerations, planning rules, and a first-week plan.</p>
         </div>
         <div className="intake-score" aria-label={`${contextScore}% context captured`}>
           <span>{contextScore}</span>
           <small>/100</small>
         </div>
       </section>
+
+      {isGraphStale ? (
+        <aside className="intake-stale-note" aria-live="polite">
+          Your Context Graph may be out of date. Save your intake to refresh it.
+        </aside>
+      ) : null}
 
       <section className="life-upload-panel">
         <div className="life-upload-panel__header">
@@ -74,7 +81,7 @@ export function IntakeScreen({ onOpenContext }: IntakeScreenProps) {
             <Upload size={18} aria-hidden="true" />
             Upload later
           </button>
-          <p>Document/image upload is staged for V2. For now, paste text so the planning model can use it.</p>
+          <p>Document/image upload is staged for V2. For now, paste text so the planning logic can use it.</p>
         </div>
       </section>
 
@@ -110,8 +117,8 @@ export function IntakeScreen({ onOpenContext }: IntakeScreenProps) {
       <section className="intake-save-strip">
         <div>
           <span className="eyebrow">Assessment output</span>
-          <h2>The next version should turn this into a health context graph.</h2>
-          <p>Goals, constraints, preferences, risk flags, motivation style, and real-world friction become planning inputs.</p>
+          <h2>Saving generates or updates your Health Context Graph.</h2>
+          <p>After saving, you can view the graph and see the strengths, friction points, safety boundaries, planning rules, and first-week plan it created.</p>
         </div>
         <button onClick={() => void saveIntake()} type="button">
           <Sparkles size={18} aria-hidden="true" />

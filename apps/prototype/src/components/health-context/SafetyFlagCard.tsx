@@ -26,6 +26,10 @@ export function SafetyFlagCard({ safetyFlag }: SafetyFlagCardProps) {
           <dt>Disclaimer level</dt>
           <dd>{formatLabel(safetyFlag.disclaimerLevel)}</dd>
         </div>
+        <div>
+          <dt>Blocked recommendation types</dt>
+          <dd>{safetyFlag.blockedRecommendationTypes.map(formatLabel).join(', ') || 'None'}</dd>
+        </div>
       </dl>
     </article>
   )

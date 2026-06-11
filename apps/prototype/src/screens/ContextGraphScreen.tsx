@@ -42,6 +42,19 @@ export function ContextGraphScreen({ onOpenIntake }: ContextGraphScreenProps) {
         supporting="VitaPilot turns intake answers into strengths, friction points, safety boundaries, planning rules, and a first-week starter plan."
       />
 
+      {status === 'ready' && graph ? (
+        <section className="context-loop-card" aria-label="Graph update loop">
+          <div>
+            <span className="eyebrow">Graph loop</span>
+            <h2>Generated {formatDate(graph.generatedAt)}</h2>
+            <p>Update your intake anytime to refresh your graph and plan.</p>
+          </div>
+          <button className="text-button" onClick={onOpenIntake} type="button">
+            Edit Intake
+          </button>
+        </section>
+      ) : null}
+
       {status === 'loading' ? (
         <section className="context-state" aria-live="polite">
           <span className="eyebrow">Loading</span>
@@ -66,13 +79,31 @@ export function ContextGraphScreen({ onOpenIntake }: ContextGraphScreenProps) {
           <span className="eyebrow">Try again</span>
           <h2>The graph did not load cleanly.</h2>
           <p>Your intake is still safe. This view can try reading the saved graph again.</p>
-          <button className="text-button" onClick={() => void refreshGraph()} type="button">
-            Reload graph
-          </button>
+          <div className="context-state__actions">
+            <button className="text-button" onClick={() => void refreshGraph()} type="button">
+              Reload graph
+            </button>
+            <button className="text-button" onClick={onOpenIntake} type="button">
+              Go to Intake
+            </button>
+          </div>
         </section>
       ) : null}
 
       {status === 'ready' && graph ? <HealthContextGraphView graph={graph} /> : null}
     </section>
   )
+}
+
+function formatDate(value: string) {
+  const date = new Date(value)
+
+  if (Number.isNaN(date.getTime())) {
+    return value
+  }
+
+  return new Intl.DateTimeFormat(undefined, {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(date)
 }
